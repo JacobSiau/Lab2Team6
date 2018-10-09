@@ -126,4 +126,4 @@ c:\Users\jacob\PycharmProjects\Team6Lab2\Build\core\Stream.cpp.o: \
  C:\Users\jacob\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.0\cores\esp32\HardwareSerial.h \
  C:\Users\jacob\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.0\cores\esp32\Esp.h \
  C:\Users\jacob\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.0\cores\esp32/Arduino.h \
- C:\Users\jacob\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.0\variants\esp32/pins_arduino.h
+ C:\Users\jacob\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.0\variants\feather_esp32/pins_arduino.h

@@ -2,19 +2,85 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59617a02-4a6a-4856-a3c8-7119c358e716" name="Default Changelist" comment="Added WiFiTest to ESP32 Folder">
-      <change afterPath="$PROJECT_DIR$/CommandCenter/MQTTClient.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CommandCenter/MQTTClient2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/arduino.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/arduino.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/Test1.ino.bin" beforeDir="false" afterPath="$PROJECT_DIR$/Build/Test1.ino.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/Test1.ino.elf" beforeDir="false" afterPath="$PROJECT_DIR$/Build/Test1.ino.elf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/arduino.ar" beforeDir="false" afterPath="$PROJECT_DIR$/Build/arduino.ar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/build.options.json" beforeDir="false" afterPath="$PROJECT_DIR$/Build/build.options.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/Esp.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/Esp.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/Esp.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/Esp.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/HardwareSerial.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/HardwareSerial.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/IPAddress.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/IPAddress.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/IPAddress.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/IPAddress.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/IPv6Address.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/IPv6Address.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/IPv6Address.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/IPv6Address.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/MD5Builder.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/MD5Builder.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/MD5Builder.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/MD5Builder.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/Print.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/Print.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/Print.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/Print.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/Stream.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/Stream.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/Stream.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/Stream.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/StreamString.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/StreamString.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/StreamString.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/StreamString.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/WMath.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/WMath.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/WString.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/WString.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/base64.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/base64.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/base64.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/base64.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/cbuf.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/cbuf.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-adc.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-adc.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-bt.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-bt.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-dac.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-dac.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-gpio.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-gpio.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-i2c.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-i2c.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-ledc.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-ledc.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-matrix.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-matrix.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-misc.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-misc.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-psram.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-psram.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-sigmadelta.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-sigmadelta.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-spi.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-spi.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-time.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-time.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-timer.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-timer.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-touch.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-touch.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/esp32-hal-uart.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/esp32-hal-uart.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/libb64/cdecode.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/libb64/cdecode.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/libb64/cencode.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/libb64/cencode.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/main.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/main.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/stdlib_noniso.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/stdlib_noniso.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/wiring_pulse.c.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/wiring_pulse.c.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/wiring_pulse.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/wiring_pulse.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/wiring_shift.c.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/wiring_shift.c.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/core/wiring_shift.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/core/wiring_shift.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/includes.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Build/includes.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/PubSubClient/PubSubClient.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/PubSubClient/PubSubClient.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/PubSubClient/PubSubClient.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/PubSubClient/PubSubClient.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/ETH.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/ETH.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/ETH.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/ETH.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFi.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFi.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFi.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFi.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiAP.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiAP.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiAP.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiAP.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiClient.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiClient.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiClient.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiClient.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiGeneric.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiGeneric.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiGeneric.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiGeneric.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiMulti.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiMulti.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiMulti.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiMulti.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiSTA.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiSTA.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiSTA.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiSTA.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiScan.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiScan.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiScan.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiScan.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiServer.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiServer.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiServer.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiServer.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiUdp.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiUdp.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiUdp.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/libraries/WiFi/WiFiUdp.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/preproc/ctags_target_for_gcc_minus_e.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Build/preproc/ctags_target_for_gcc_minus_e.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.d" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommandCenter/PublishTest.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PythonTest/Bluetooth.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PythonTest/Client.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PythonTest/FieldData.json" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/FieldData.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PythonTest/Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/CVData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommandCenter/MQTTClient.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/MQTTClient.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ESP32/HBridge/HBridge.ino" beforeDir="false" afterPath="$PROJECT_DIR$/ESP32/HBridge/HBridge.ino" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WeMos/Test1.ino" beforeDir="false" afterPath="$PROJECT_DIR$/WeMos/Test1.ino" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -58,7 +124,7 @@
         <counts>
           <entry key="dummy" value="38" />
           <entry key="md" value="162" />
-          <entry key="py" value="3559" />
+          <entry key="py" value="3611" />
           <entry key="txt" value="89" />
           <entry key="yaml" value="173" />
         </counts>
@@ -67,7 +133,7 @@
         <counts>
           <entry key="Markdown" value="162" />
           <entry key="PLAIN_TEXT" value="127" />
-          <entry key="Python" value="3559" />
+          <entry key="Python" value="3611" />
           <entry key="YAML" value="173" />
         </counts>
       </usages-collector>
@@ -101,20 +167,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-line="28" />
+            <state relative-caret-position="162">
+              <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="27" column="43" selection-start-line="27" selection-start-column="43" selection-end-line="27" selection-end-column="43" />
+            <state relative-caret-position="180">
+              <caret line="10" column="33" selection-start-line="10" selection-start-column="33" selection-end-line="10" selection-end-column="33" />
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -146,14 +215,14 @@
         <option value="$PROJECT_DIR$/CommandCenter/PublishTest.py" />
         <option value="$PROJECT_DIR$/CommandCenter/ClientTest1.py" />
         <option value="$PROJECT_DIR$/PythonTest/Client.py" />
-        <option value="$PROJECT_DIR$/CommandCenter/MQTTClient.py" />
         <option value="$PROJECT_DIR$/CommandCenter/MQTTClient2.py" />
+        <option value="$PROJECT_DIR$/CommandCenter/MQTTClient.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-7" />
-    <option name="width" value="1057" />
+    <option name="width" value="707" />
     <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -225,7 +294,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.MQTTClient2">
+  <component name="RunManager" selected="Python.MQTTClient">
     <configuration name="ClientTest1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Team6Lab2" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -340,8 +409,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.MQTTClient2" />
         <item itemvalue="Python.MQTTClient" />
+        <item itemvalue="Python.MQTTClient2" />
         <item itemvalue="Python.ClientTest1" />
         <item itemvalue="Python.PublishTest" />
         <item itemvalue="Python.Main" />
@@ -377,10 +446,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1057" height="1047" extended-state="0" />
+    <frame x="-7" y="0" width="707" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27379784" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20179372" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -501,17 +570,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient.py">
+    <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="28" />
+        <state relative-caret-position="180">
+          <caret line="10" column="33" selection-start-line="10" selection-start-column="33" selection-end-line="10" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient2.py">
+    <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="27" column="43" selection-start-line="27" selection-start-column="43" selection-end-line="27" selection-end-column="43" />
+        <state relative-caret-position="162">
+          <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
         </state>
       </provider>
     </entry>

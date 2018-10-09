@@ -109,4 +109,4 @@ c:\Users\jacob\PycharmProjects\Team6Lab2\Build\core\wiring_pulse.c.o: \
  C:\Users\jacob\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.0\cores\esp32\esp8266-compat.h \
  C:\Users\jacob\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.0\cores\esp32\stdlib_noniso.h \
  C:\Users\jacob\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.0\cores\esp32\binary.h \
- C:\Users\jacob\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.0\variants\esp32/pins_arduino.h
+ C:\Users\jacob\AppData\Local\Arduino15\packages\esp32\hardware\esp32\1.0.0\variants\feather_esp32/pins_arduino.h

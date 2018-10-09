@@ -2,7 +2,7 @@
   "additionalFiles": "",
   "builtInLibrariesFolders": "C:\\Users\\jacob\\Documents\\arduino-1.8.7-windows\\arduino-1.8.7\\libraries",
   "customBuildProperties": "build.path=c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Build,build.warn_data_percentage=75,runtime.tools.xtensa-esp32-elf-gcc.path=C:\\Users\\jacob\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\1.22.0-80-g6c4433a-5.2.0,runtime.tools.xtensa-esp32-elf-gcc-1.22.0-80-g6c4433a-5.2.0.path=C:\\Users\\jacob\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\xtensa-esp32-elf-gcc\\1.22.0-80-g6c4433a-5.2.0,runtime.tools.esptool.path=C:\\Users\\jacob\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\esptool\\2.3.1,runtime.tools.esptool-2.3.1.path=C:\\Users\\jacob\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\esptool\\2.3.1,runtime.tools.mkspiffs.path=C:\\Users\\jacob\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\mkspiffs\\0.2.3,runtime.tools.mkspiffs-0.2.3.path=C:\\Users\\jacob\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\mkspiffs\\0.2.3",
-  "fqbn": "esp32:esp32:esp32:PSRAM=disabled,PartitionScheme=default,FlashMode=qio,FlashFreq=80,FlashSize=4M,UploadSpeed=115200,DebugLevel=none",
+  "fqbn": "esp32:esp32:featheresp32:FlashFreq=80,UploadSpeed=921600,DebugLevel=none",
   "hardwareFolders": "C:\\Users\\jacob\\Documents\\arduino-1.8.7-windows\\arduino-1.8.7\\hardware,C:\\Users\\jacob\\AppData\\Local\\Arduino15\\packages,C:\\Users\\jacob\\Documents\\Arduino\\hardware",
   "otherLibrariesFolders": "C:\\Users\\jacob\\Documents\\Arduino\\libraries",
   "runtime.ide.version": "10807",

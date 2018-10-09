@@ -74,7 +74,9 @@ const int Stop[4] = {0, 0, 0, 0};         // Stop pattern
 const int Forward[4] = {255, 0, 255, 0};  // Forward pattern
 const int Backward[4] = {0, 255, 0, 255}; // Backward pattern
 const int Left[4] = {255, 0, 0, 255};     // Left pattern
+const int LeftBias[4] = {255, 125, 125, 255}; // Left Bias pattern
 const int Right[4] = {0, 255, 255, 0};    // Right pattern
+const int RightBias[4] = {125, 255, 255, 125}; // Right Bias pattern
 
 const int freq = 30000; // PWM output frequency [Hz]
 const int res = 8;      // resolution for PWM channels [b]
@@ -138,13 +140,13 @@ void hBridge(int dir)
     }
     case 4: // 4: Left Biased
     {
-        writeOut(Left);
+        writeOut(LeftBias);
         Serial.println("\t[L-B]");
         break;
     }
     case 5: // 5: Right Biased
     {
-        writeOut(Right);
+        writeOut(RightBias);
         Serial.println("\t[R-B]");
         break;
     }

@@ -7,7 +7,7 @@
   {
     "Sourcefile": "",
     "Include": "",
-    "Includepath": "C:\\Users\\jacob\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.0\\variants\\esp32"
+    "Includepath": "C:\\Users\\jacob\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\1.0.0\\variants\\feather_esp32"
   },
   {
     "Sourcefile": "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Build\\sketch\\Test1.ino.cpp",
