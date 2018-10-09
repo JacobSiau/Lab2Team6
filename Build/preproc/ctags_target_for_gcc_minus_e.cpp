@@ -10,6 +10,7 @@
 #define hRight 82
 #define hLeftB 75
 #define hRightB 81
+#define hToggle 77
 
 const char *ssid = "DESKTOP-PTFSVRE 2560";
 const char *password = "E404h58]";
@@ -19,14 +20,14 @@ IPAddress mqttServer(192, 168, 137, 194);
 
 const int mqttPort = 1883;
 const char *mqttUser = 
-# 19 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
+# 20 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
                       __null
-# 19 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+# 20 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                           ;
 const char *mqttPassword = 
-# 20 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
+# 21 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
                           __null
-# 20 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+# 21 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                               ;
 
 const int Motors[4] = {12, 15, 27, 33}; // Motor output pins [A1N1, A1N2, B1N1, B1N2]
@@ -42,8 +43,8 @@ const int LeftBias[4] = {125, 255, 255, 125}; // Right Bias pattern
 const int freq = 30000; // PWM output frequency [Hz]
 const int res = 8; // resolution for PWM channels [b]
 
-byte interruptPin = 14; // pushbutton interrupt input (also tied to LED1)
-byte motionLED = 32;
+byte interruptPin = 14; // pushbutton interrupt input
+byte motionLED = 13; // output LED for motion enabled TRUE/FALSE status
 int currentstate = 0; // current state for hBridge
 volatile bool motionenabled; // global motion enabling/disabling variable
 volatile long debounce_time = 0; // for debouncing
@@ -61,7 +62,7 @@ void callback(char *topic, byte *payload, unsigned int length)
   if (String(topic) == "esp32/dir")
   {
     Serial.println("Direction control char: " + (int)payload[0]);
-    hBridge((int) payload[0]);
+    hBridge((int)payload[0]);
   }
   else
   {
@@ -92,18 +93,20 @@ void writeOut(const int *src)
 // 2. disables all motion commands in loop() by toggling a global boolean
 void toggleMotion()
 {
-  Serial.println("X");
   current_time = millis();
-  if ((current_time - debounce_time) > 300)
+  if ((current_time - debounce_time) > 800)
   {
+    Serial.println("X");
     if (motionenabled)
     {
       motionenabled = false;
       hBridge(83);
+      client.publish("esp32/motion", "DISABLED");
     }
     else
     {
       motionenabled = true;
+      client.publish("esp32/motion", "ENABLED");
     }
   }
   debounce_time = current_time;
@@ -111,50 +114,55 @@ void toggleMotion()
 }
 
 // Hbridge takes a integer representing a direction case and writes a pattern based on it
-// Cases: -1=Stop, 0=Forward, 1=Backward, 2=Left, 3=Right
-// Cases: 4=Left Bias, 5=Right Bias
 // void hBridge(int dir, int lbias, int rbias)
 void hBridge(int dir)
 {
+  writeOut(Stop);
+  delay(10);
   switch (dir)
   {
-  case 83: // -1: Stop
+  case 77:
+  {
+    toggleMotion();
+    break;
+  }
+  case 83:
   {
     writeOut(Stop);
     Serial.println("\t[S]");
     break;
   }
-  case 70: // 0: Forward
+  case 70:
   {
     writeOut(Forward);
     Serial.println("\t[F]");
     break;
   }
-  case 66: // 1: Backward
+  case 66:
   {
     writeOut(Backward);
     Serial.println("\t[B]");
     break;
   }
-  case 76: // 2: Left
+  case 76:
   {
     writeOut(Left);
     Serial.println("\t[L]");
     break;
   }
-  case 82: // 3: Right
+  case 82:
   {
     writeOut(Right);
     Serial.println("\t[R]");
     break;
   }
-  case 75: // 4: Left Biased
+  case 75:
   {
     writeOut(LeftBias);
     Serial.println("\t[L-B]");
     break;
   }
-  case 81: // 5: Right Biased
+  case 81:
   {
     writeOut(RightBias);
     Serial.println("\t[R-B]");
