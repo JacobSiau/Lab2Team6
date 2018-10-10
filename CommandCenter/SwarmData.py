@@ -8,8 +8,8 @@ class SwarmData:
     data = {}
     ball = ()
     corners = {}
-    redteam = {}
-    blueteam = {}
+    red = {}
+    blue = {}
     xcoords = []
     ycoords = []
 
@@ -23,14 +23,14 @@ class SwarmData:
         __self__.ball = (__self__.data['Ball']['Object Center']['X'],
                          __self__.data['Ball']['Object Center']['Y'])
         __self__.corners = __self__.data['Corners']
-        __self__.redteam = {
+        __self__.red = {
             'circle': (__self__.data['Red Team Data']['Circle']['Object Center']['X'],
                        __self__.data['Red Team Data']['Circle']['Object Center']['Y']),
             'square': (__self__.data['Red Team Data']['Square']['Object Center']['X'],
                        __self__.data['Red Team Data']['Square']['Object Center']['Y']),
             'triangle': (__self__.data['Red Team Data']['Triangle']['Object Center']['X'],
                          __self__.data['Red Team Data']['Triangle']['Object Center']['Y'])}
-        __self__.blueteam = {
+        __self__.blue = {
             'circle': (__self__.data['Blue Team Data']['Circle']['Object Center']['X'],
                        __self__.data['Blue Team Data']['Circle']['Object Center']['Y']),
             'square': (__self__.data['Blue Team Data']['Square']['Object Center']['X'],

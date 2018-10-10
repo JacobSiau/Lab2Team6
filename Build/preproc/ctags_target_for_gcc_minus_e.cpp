@@ -2,6 +2,9 @@
 # 1 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 # 2 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 2
 # 3 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 2
+//#include <MPU9250_asukiaaa.h>
+//#include <math.h>
+//#define NUMSAMPLES 20
 
 #define hStop 83
 #define hForward 70
@@ -12,6 +15,10 @@
 #define hRightB 81
 #define hToggle 77
 
+// MPU9250 mySensor;
+// float average_mY;
+// float average_mX;
+
 const char *ssid = "DESKTOP-PTFSVRE 2560";
 const char *password = "E404h58]";
 IPAddress mqttServer(192, 168, 137, 194);
@@ -20,14 +27,14 @@ IPAddress mqttServer(192, 168, 137, 194);
 
 const int mqttPort = 1883;
 const char *mqttUser = 
-# 20 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
+# 27 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
                       __null
-# 20 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+# 27 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                           ;
 const char *mqttPassword = 
-# 21 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
+# 28 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
                           __null
-# 21 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+# 28 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                               ;
 
 const int Motors[4] = {12, 15, 27, 33}; // Motor output pins [A1N1, A1N2, B1N1, B1N2]
@@ -196,10 +203,44 @@ void reconnect()
   }
 }
 
+// void sample()
+// {
+//   float sum_mY = 0;
+//   float sum_mX = 0;
+//   for (int count = 0; count < NUMSAMPLES; count++)
+//   {
+//     mySensor.magUpdate();
+//     sum_mX += mySensor.magX();
+//     sum_mY += mySensor.magY();
+//     count++;
+//     delay(10);
+//   }
+//   average_mX = sum_mX / NUMSAMPLES;
+//   average_mY = sum_mY / NUMSAMPLES;
+//   // Serial.println("average x: " + String(average_mX));
+//   // Serial.println("average y: " + String(average_mY));
+// }
+
+// float direction()
+// {
+//   return atan2(average_mX, average_mY);
+// }
+
 // the main setup function of the Arduino program
 void setup()
 {
   Serial.begin(115200);
+
+  // uint8_t sensorId;
+  // float mX, mY, mZ;
+  // float yGaussData, xGaussData;
+  // float dir;
+
+  // Wire.begin(23, 22);
+
+  // mySensor.setWire(&Wire);
+  // mySensor.beginMag();
+  // sensorId = mySensor.readId();
 
   // 1. setting pinmodes (pin, OUTPUT/INPUT)
   // 2. setting up PWM channels (channel, frequency, resolution)
@@ -240,4 +281,6 @@ void loop()
   }
 
   client.loop();
+  // sample();
+  // Serial.println("Direction= " + String(direction()));
 }

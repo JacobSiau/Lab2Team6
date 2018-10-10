@@ -2,18 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59617a02-4a6a-4856-a3c8-7119c358e716" name="Default Changelist" comment="Added WiFiTest to ESP32 Folder">
-      <change afterPath="$PROJECT_DIR$/CommandCenter/CommandCenterMain.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CommandCenter/SwarmData.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/arduino.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/arduino.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/Test1.ino.bin" beforeDir="false" afterPath="$PROJECT_DIR$/Build/Test1.ino.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/Test1.ino.elf" beforeDir="false" afterPath="$PROJECT_DIR$/Build/Test1.ino.elf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/arduino.ar" beforeDir="false" afterPath="$PROJECT_DIR$/Build/arduino.ar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/preproc/ctags_target_for_gcc_minus_e.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Build/preproc/ctags_target_for_gcc_minus_e.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommandCenter/CVData.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESP32/HBridge/HBridge.ino" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommandCenter/CommandCenterMain.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/CommandCenterMain.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommandCenter/SwarmData.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/SwarmData.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WeMos/Test1.ino" beforeDir="false" afterPath="$PROJECT_DIR$/WeMos/Test1.ino" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -57,7 +52,7 @@
         <counts>
           <entry key="dummy" value="55" />
           <entry key="md" value="162" />
-          <entry key="py" value="4919" />
+          <entry key="py" value="5045" />
           <entry key="txt" value="89" />
           <entry key="yaml" value="173" />
         </counts>
@@ -66,7 +61,7 @@
         <counts>
           <entry key="Markdown" value="162" />
           <entry key="PLAIN_TEXT" value="144" />
-          <entry key="Python" value="4919" />
+          <entry key="Python" value="5045" />
           <entry key="YAML" value="173" />
         </counts>
       </usages-collector>
@@ -74,14 +69,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="18" column="17" lean-forward="true" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
+            <state relative-caret-position="216">
+              <caret line="12" column="33" selection-start-line="12" selection-start-column="33" selection-end-line="12" selection-end-column="33" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
-                <marker date="1539069962561" expanded="true" signature="604:605" ph="..." />
+                <marker date="1539144696290" expanded="true" signature="95:96" ph="..." />
               </folding>
             </state>
           </provider>
@@ -90,22 +85,22 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CommandCenter/SwarmData.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1098">
-              <caret line="63" selection-start-line="63" selection-end-line="63" />
+            <state relative-caret-position="126">
+              <caret line="7" column="13" lean-forward="true" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
-                <marker date="1539065540728" expanded="true" signature="53:54" ph="..." />
-                <marker date="1539065540728" expanded="true" signature="272:331" ph="..." />
+                <marker date="1539143911605" expanded="true" signature="53:54" ph="..." />
+                <marker date="1539143911605" expanded="true" signature="264:323" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="13" column="15" selection-start-line="13" selection-start-column="15" selection-end-line="13" selection-end-column="15" />
+            <state relative-caret-position="198">
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
             </state>
           </provider>
         </entry>
@@ -130,6 +125,14 @@
         <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>Swarm</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>S</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="UPDATE_TYPE" value="MERGE" />
@@ -402,7 +405,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info active="true" anchor="right" id="Run" order="3" sideWeight="0.4989775" visible="true" weight="0.5026652" />
+      <window_info active="true" anchor="right" id="Run" order="3" sideWeight="0.4989775" visible="true" weight="0.42217484" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -507,33 +510,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" column="33" selection-start-line="12" selection-start-column="33" selection-end-line="12" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+            <marker date="1539144696290" expanded="true" signature="95:96" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CommandCenter/SwarmData.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1098">
-          <caret line="63" selection-start-line="63" selection-end-line="63" />
+        <state relative-caret-position="126">
+          <caret line="7" column="13" lean-forward="true" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
-            <marker date="1539065540728" expanded="true" signature="53:54" ph="..." />
-            <marker date="1539065540728" expanded="true" signature="272:331" ph="..." />
+            <marker date="1539143911605" expanded="true" signature="53:54" ph="..." />
+            <marker date="1539143911605" expanded="true" signature="264:323" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="13" column="15" selection-start-line="13" selection-start-column="15" selection-end-line="13" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="18" column="17" lean-forward="true" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-            <marker date="1539069962561" expanded="true" signature="604:605" ph="..." />
-          </folding>
+        <state relative-caret-position="198">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
         </state>
       </provider>
     </entry>

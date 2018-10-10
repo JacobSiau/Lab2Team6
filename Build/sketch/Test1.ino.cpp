@@ -3,6 +3,9 @@
 #line 1 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 #include <WiFi.h>
 #include <PubSubClient.h>
+//#include <MPU9250_asukiaaa.h>
+//#include <math.h>
+//#define NUMSAMPLES 20
 
 #define hStop 83
 #define hForward 70
@@ -12,6 +15,10 @@
 #define hLeftB 75
 #define hRightB 81
 #define hToggle 77
+
+// MPU9250 mySensor;
+// float average_mY;
+// float average_mX;
 
 const char *ssid = "DESKTOP-PTFSVRE 2560";
 const char *password = "E404h58]";
@@ -46,21 +53,21 @@ volatile long current_time = 0;  // for debouncing
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-#line 46 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 53 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void callback(char *topic, byte *payload, unsigned int length);
-#line 73 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 80 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void writeOut(const int *src);
-#line 84 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 91 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void toggleMotion();
-#line 108 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 115 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void hBridge(int dir);
-#line 165 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 172 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void reconnect();
-#line 190 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 220 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void setup();
-#line 225 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 266 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void loop();
-#line 46 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 53 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void callback(char *topic, byte *payload, unsigned int length)
 {
 
@@ -204,10 +211,44 @@ void reconnect()
   }
 }
 
+// void sample()
+// {
+//   float sum_mY = 0;
+//   float sum_mX = 0;
+//   for (int count = 0; count < NUMSAMPLES; count++)
+//   {
+//     mySensor.magUpdate();
+//     sum_mX += mySensor.magX();
+//     sum_mY += mySensor.magY();
+//     count++;
+//     delay(10);
+//   }
+//   average_mX = sum_mX / NUMSAMPLES;
+//   average_mY = sum_mY / NUMSAMPLES;
+//   // Serial.println("average x: " + String(average_mX));
+//   // Serial.println("average y: " + String(average_mY));
+// }
+
+// float direction()
+// {
+//   return atan2(average_mX, average_mY);
+// }
+
 // the main setup function of the Arduino program
 void setup()
 {
   Serial.begin(115200);
+
+  // uint8_t sensorId;
+  // float mX, mY, mZ;
+  // float yGaussData, xGaussData;
+  // float dir;
+
+  // Wire.begin(23, 22);
+
+  // mySensor.setWire(&Wire);
+  // mySensor.beginMag();
+  // sensorId = mySensor.readId();
 
   // 1. setting pinmodes (pin, OUTPUT/INPUT)
   // 2. setting up PWM channels (channel, frequency, resolution)
@@ -248,4 +289,6 @@ void loop()
   }
 
   client.loop();
+  // sample();
+  // Serial.println("Direction= " + String(direction()));
 }
