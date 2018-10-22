@@ -6,14 +6,14 @@
 //#include <math.h>
 //#define NUMSAMPLES 20
 
-#define hStop 83
-#define hForward 70
-#define hBackward 66
-#define hLeft 76
-#define hRight 82
-#define hLeftB 75
-#define hRightB 81
-#define hToggle 77
+#define hStop 83 /* S*/
+#define hForward 70 /* F*/
+#define hBackward 66 /* B*/
+#define hLeft 76 /* L*/
+#define hRight 82 /* R*/
+#define hLeftB 75 /* K*/
+#define hRightB 81 /* Q*/
+#define hToggle 77 /* M*/
 
 // MPU9250 mySensor;
 // float average_mY;
@@ -21,20 +21,21 @@
 
 const char *ssid = "DESKTOP-PTFSVRE 2560";
 const char *password = "E404h58]";
-IPAddress mqttServer(192, 168, 137, 194);
+//IPAddress mqttServer(192, 168, 137, 194);
+IPAddress mqttServer(129, 118, 19, 90);
 // const char* mqttServer = "mqtt://iot.eclipse.org";
 // const char* mqttServer = "127.0.0.1";
 
 const int mqttPort = 1883;
 const char *mqttUser = 
-# 27 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
+# 28 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
                       __null
-# 27 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+# 28 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                           ;
 const char *mqttPassword = 
-# 28 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
+# 29 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
                           __null
-# 28 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+# 29 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                               ;
 
 const int Motors[4] = {12, 15, 27, 33}; // Motor output pins [A1N1, A1N2, B1N1, B1N2]
@@ -50,7 +51,7 @@ const int LeftBias[4] = {125, 255, 255, 125}; // Right Bias pattern
 const int freq = 30000; // PWM output frequency [Hz]
 const int res = 8; // resolution for PWM channels [b]
 
-byte interruptPin = 14; // pushbutton interrupt input
+//byte interruptPin = 14;          // pushbutton interrupt input
 byte motionLED = 13; // output LED for motion enabled TRUE/FALSE status
 int currentstate = 0; // current state for hBridge
 volatile bool motionenabled; // global motion enabling/disabling variable
@@ -100,14 +101,14 @@ void writeOut(const int *src)
 // 2. disables all motion commands in loop() by toggling a global boolean
 void toggleMotion()
 {
-  current_time = millis();
-  if ((current_time - debounce_time) > 800)
-  {
+  // current_time = millis();
+  // if ((current_time - debounce_time) > 800)
+  // {
     Serial.println("X");
     if (motionenabled)
     {
       motionenabled = false;
-      hBridge(83);
+      hBridge(83 /* S*/);
       client.publish("esp32/motion", "DISABLED");
     }
     else
@@ -115,8 +116,8 @@ void toggleMotion()
       motionenabled = true;
       client.publish("esp32/motion", "ENABLED");
     }
-  }
-  debounce_time = current_time;
+  //}
+  //debounce_time = current_time;
   digitalWrite(motionLED, motionenabled);
 }
 
@@ -128,48 +129,48 @@ void hBridge(int dir)
   delay(10);
   switch (dir)
   {
-  case 77:
+  case 77 /* M*/:
   {
     toggleMotion();
     break;
   }
-  case 83:
+  case 83 /* S*/:
   {
     writeOut(Stop);
     Serial.println("\t[S]");
     break;
   }
-  case 70:
+  case 70 /* F*/:
   {
     writeOut(Forward);
     Serial.println("\t[F]");
     break;
   }
-  case 66:
+  case 66 /* B*/:
   {
     writeOut(Backward);
     Serial.println("\t[B]");
     break;
   }
-  case 76:
+  case 76 /* L*/:
   {
     writeOut(Left);
     Serial.println("\t[L]");
     break;
   }
-  case 82:
+  case 82 /* R*/:
   {
     writeOut(Right);
     Serial.println("\t[R]");
     break;
   }
-  case 75:
+  case 75 /* K*/:
   {
     writeOut(LeftBias);
     Serial.println("\t[L-B]");
     break;
   }
-  case 81:
+  case 81 /* Q*/:
   {
     writeOut(RightBias);
     Serial.println("\t[R-B]");
@@ -186,7 +187,7 @@ void reconnect()
   {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
-    if (client.connect("ESP32Client"))
+    if (client.connect("ESP32Client", mqttUser, mqttPassword))
     {
       Serial.println("connected");
       // Subscribe
@@ -254,9 +255,9 @@ void setup()
 
   // 1. declaring the interrupt pin location
   // 2. pointing to the ISR to be used upon interrupt on a digital I/O pin
-  pinMode(interruptPin, 0x09);
+  //pinMode(interruptPin, INPUT_PULLDOWN);
   pinMode(motionLED, 0x02);
-  attachInterrupt((((interruptPin)<40)?(interruptPin):-1), toggleMotion, 0x01);
+  //attachInterrupt(digitalPinToInterrupt(interruptPin), toggleMotion, RISING);
   motionenabled = true;
 
   WiFi.begin(ssid, password);
