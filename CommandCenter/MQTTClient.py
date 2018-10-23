@@ -20,7 +20,7 @@ client.on_connect = on_connect
 client.on_message = on_message
 
 # client.connect("192.168.137.194", 1883, 60)
-client.connect("129.118.19.90", 1883, 60)
+client.connect("192.168.137.219", 1883, 60)
 
 # Blocking call that processes network traffic, dispatches callbacks and
 # handles reconnecting.

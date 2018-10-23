@@ -1,8 +1,5 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
-//#include <MPU9250_asukiaaa.h>
-//#include <math.h>
-//#define NUMSAMPLES 20
 
 #define hStop 83 // S
 #define hForward 70 // F
@@ -13,14 +10,14 @@
 #define hRightB 81 // Q
 #define hToggle 77 // M
 
-// MPU9250 mySensor;
-// float average_mY;
-// float average_mX;
+#define enc0A 34
+#define enctripval 2730
+#define enc0B 39
 
 const char *ssid = "DESKTOP-PTFSVRE 2560";
 const char *password = "E404h58]";
 //IPAddress mqttServer(192, 168, 137, 194);
-IPAddress mqttServer(129, 118, 19, 90);
+IPAddress mqttServer(192, 168, 137, 219);
 // const char* mqttServer = "mqtt://iot.eclipse.org";
 // const char* mqttServer = "127.0.0.1";
 
@@ -41,12 +38,18 @@ const int LeftBias[4] = {125, 255, 255, 125};  // Right Bias pattern
 const int freq = 30000; // PWM output frequency [Hz]
 const int res = 8;      // resolution for PWM channels [b]
 
-//byte interruptPin = 14;          // pushbutton interrupt input
 byte motionLED = 13;             // output LED for motion enabled TRUE/FALSE status
 int currentstate = 0;            // current state for hBridge
 volatile bool motionenabled;     // global motion enabling/disabling variable
 volatile long debounce_time = 0; // for debouncing
 volatile long current_time = 0;  // for debouncing
+
+volatile int enc0Acount = 0;
+volatile int enc0Bcount = 0;
+volatile bool oldstateA = false;
+volatile bool oldstateB = false;
+volatile bool stateA = false;
+volatile bool stateB = false;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -194,44 +197,10 @@ void reconnect()
   }
 }
 
-// void sample()
-// {
-//   float sum_mY = 0;
-//   float sum_mX = 0;
-//   for (int count = 0; count < NUMSAMPLES; count++)
-//   {
-//     mySensor.magUpdate();
-//     sum_mX += mySensor.magX();
-//     sum_mY += mySensor.magY();
-//     count++;
-//     delay(10);
-//   }
-//   average_mX = sum_mX / NUMSAMPLES;
-//   average_mY = sum_mY / NUMSAMPLES;
-//   // Serial.println("average x: " + String(average_mX));
-//   // Serial.println("average y: " + String(average_mY));
-// }
-
-// float direction()
-// {
-//   return atan2(average_mX, average_mY);
-// }
-
 // the main setup function of the Arduino program
 void setup()
 {
   Serial.begin(115200);
-
-  // uint8_t sensorId;
-  // float mX, mY, mZ;
-  // float yGaussData, xGaussData;
-  // float dir;
-
-  // Wire.begin(23, 22);
-
-  // mySensor.setWire(&Wire);
-  // mySensor.beginMag();
-  // sensorId = mySensor.readId();
 
   // 1. setting pinmodes (pin, OUTPUT/INPUT)
   // 2. setting up PWM channels (channel, frequency, resolution)
@@ -245,10 +214,11 @@ void setup()
 
   // 1. declaring the interrupt pin location
   // 2. pointing to the ISR to be used upon interrupt on a digital I/O pin
-  //pinMode(interruptPin, INPUT_PULLDOWN);
   pinMode(motionLED, OUTPUT);
-  //attachInterrupt(digitalPinToInterrupt(interruptPin), toggleMotion, RISING);
+  // pinMode(enc0A, INPUT);
+  // pinMode(enc0B, INPUT);
   motionenabled = true;
+  digitalWrite(motionLED, HIGH);
 
   WiFi.begin(ssid, password);
 
@@ -272,6 +242,29 @@ void loop()
   }
 
   client.loop();
-  // sample();
-  // Serial.println("Direction= " + String(direction()));
+
+  if(analogRead(enc0A) > enctripval) 
+    stateA = !stateA;
+
+  if (oldstateA != stateA) {
+    enc0Acount++;
+    if (enc0Acount > 40)
+      enc0Acount = 0;
+    oldstateA = stateA;
+  }
+
+  if(analogRead(enc0B) > enctripval) 
+    stateB = !stateB;
+
+  if (oldstateB != stateB) {
+    enc0Bcount++;
+    if (enc0Bcount > 40)
+      enc0Bcount = 0;
+    oldstateB = stateB;
+  }
+
+  Serial.print("ENC0A: ");
+  Serial.print(enc0Acount);
+  Serial.print("\nENC0B: ");
+  Serial.print(enc0Bcount);
 }
