@@ -13,8 +13,9 @@
 #define hToggle 77 /* M*/
 
 #define enc0A 34
-#define enctripval 2730
 #define enc0B 39
+#define cutoffA 3500
+#define cutoffB 3040
 
 const char *ssid = "DESKTOP-PTFSVRE 2560";
 const char *password = "E404h58]";
@@ -25,14 +26,14 @@ IPAddress mqttServer(192, 168, 137, 219);
 
 const int mqttPort = 1883;
 const char *mqttUser = 
-# 25 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
+# 26 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
                       __null
-# 25 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+# 26 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                           ;
 const char *mqttPassword = 
-# 26 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
+# 27 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
                           __null
-# 26 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+# 27 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                               ;
 
 const int Motors[4] = {12, 15, 27, 33}; // Motor output pins [A1N1, A1N2, B1N1, B1N2]
@@ -54,7 +55,10 @@ volatile bool motionenabled; // global motion enabling/disabling variable
 volatile long debounce_time = 0; // for debouncing
 volatile long current_time = 0; // for debouncing
 
+int pulsecount = 20;
 volatile int enc0Acount = 0;
+volatile int turnsA = 0;
+volatile int turnsB = 0;
 volatile int enc0Bcount = 0;
 volatile bool oldstateA = false;
 volatile bool oldstateB = false;
@@ -253,28 +257,36 @@ void loop()
 
   client.loop();
 
-  if(analogRead(34) > 2730)
-    stateA = !stateA;
+  if(analogRead(34) > 3500) {
+    stateA = true;
+  } else {
+    stateA = false;
+  }
 
   if (oldstateA != stateA) {
     enc0Acount++;
-    if (enc0Acount > 40)
+    if (enc0Acount > pulsecount) {
       enc0Acount = 0;
+      turnsA++;
+      Serial.println("A");
+    }
     oldstateA = stateA;
   }
 
-  if(analogRead(39) > 2730)
-    stateB = !stateB;
+  if(analogRead(39) > 3040) {
+    stateB = true;
+  } else {
+    stateB = false;
+  }
 
   if (oldstateB != stateB) {
     enc0Bcount++;
-    if (enc0Bcount > 40)
+    if (enc0Bcount > pulsecount) {
       enc0Bcount = 0;
+      turnsB++;
+      Serial.println("B");
+    }
     oldstateB = stateB;
   }
 
-  Serial.print("ENC0A: ");
-  Serial.print(enc0Acount);
-  Serial.print("\nENC0B: ");
-  Serial.print(enc0Bcount);
-}
+} // END main loop

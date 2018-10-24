@@ -14,8 +14,9 @@
 #define hToggle 77 // M
 
 #define enc0A 34
-#define enctripval 2730
 #define enc0B 39
+#define cutoffA 3500
+#define cutoffB 3040
 
 const char *ssid = "DESKTOP-PTFSVRE 2560";
 const char *password = "E404h58]";
@@ -47,7 +48,10 @@ volatile bool motionenabled;     // global motion enabling/disabling variable
 volatile long debounce_time = 0; // for debouncing
 volatile long current_time = 0;  // for debouncing
 
+int pulsecount = 20;
 volatile int enc0Acount = 0;
+volatile int turnsA = 0;
+volatile int turnsB = 0;
 volatile int enc0Bcount = 0;
 volatile bool oldstateA = false;
 volatile bool oldstateB = false;
@@ -57,21 +61,21 @@ volatile bool stateB = false;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-#line 57 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 61 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void callback(char *topic, byte *payload, unsigned int length);
-#line 84 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 88 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void writeOut(const int *src);
-#line 95 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 99 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void toggleMotion();
-#line 119 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 123 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void hBridge(int dir);
-#line 176 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 180 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void reconnect();
-#line 201 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 205 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void setup();
-#line 237 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 241 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void loop();
-#line 57 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 61 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void callback(char *topic, byte *payload, unsigned int length)
 {
 
@@ -261,28 +265,36 @@ void loop()
 
   client.loop();
 
-  if(analogRead(enc0A) > enctripval) 
-    stateA = !stateA;
+  if(analogRead(enc0A) > cutoffA) {
+    stateA = true;
+  } else {
+    stateA = false;
+  }
 
   if (oldstateA != stateA) {
     enc0Acount++;
-    if (enc0Acount > 40)
+    if (enc0Acount > pulsecount) {
       enc0Acount = 0;
+      turnsA++;
+      Serial.println("A");
+    }
     oldstateA = stateA;
   }
 
-  if(analogRead(enc0B) > enctripval) 
-    stateB = !stateB;
+  if(analogRead(enc0B) > cutoffB) {
+    stateB = true;
+  } else {
+    stateB = false;
+  }
 
   if (oldstateB != stateB) {
     enc0Bcount++;
-    if (enc0Bcount > 40)
+    if (enc0Bcount > pulsecount) {
       enc0Bcount = 0;
+      turnsB++;
+      Serial.println("B");
+    }
     oldstateB = stateB;
   }
 
-  Serial.print("ENC0A: ");
-  Serial.print(enc0Acount);
-  Serial.print("\nENC0B: ");
-  Serial.print(enc0Bcount);
-}
+} // END main loop

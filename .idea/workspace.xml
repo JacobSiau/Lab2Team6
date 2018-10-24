@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59617a02-4a6a-4856-a3c8-7119c358e716" name="Default Changelist" comment="Added WiFiTest to ESP32 Folder">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/Test1.ino.bin" beforeDir="false" afterPath="$PROJECT_DIR$/Build/Test1.ino.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/Test1.ino.elf" beforeDir="false" afterPath="$PROJECT_DIR$/Build/Test1.ino.elf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/preproc/ctags_target_for_gcc_minus_e.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Build/preproc/ctags_target_for_gcc_minus_e.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommandCenter/MQTTClient.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/MQTTClient.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WeMos/Test1.ino" beforeDir="false" afterPath="$PROJECT_DIR$/WeMos/Test1.ino" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WeMos/encodertest.ino" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -88,7 +80,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CommandCenter/SwarmData.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-283">
+            <state relative-caret-position="126">
               <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
@@ -102,8 +94,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="22" column="31" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+            <state relative-caret-position="540">
+              <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
             </state>
           </provider>
         </entry>
@@ -153,7 +145,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-7" />
-    <option name="width" value="1068" />
+    <option name="width" value="712" />
     <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -377,10 +369,9 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1068" height="1047" extended-state="0" />
-    <editor active="true" />
+    <frame x="-7" y="0" width="712" height="1047" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21031746" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.0" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -393,10 +384,10 @@
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32968238" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.5010225" side_tool="true" weight="0.46659365" />
       <window_info anchor="bottom" id="Python Console" order="9" />
+      <window_info active="true" anchor="bottom" id="Run" order="10" sideWeight="0.4989775" visible="true" weight="0.42716318" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info active="true" anchor="right" id="Run" order="3" sideWeight="0.4989775" visible="true" weight="0.6904762" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -465,6 +456,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="58" column="61" selection-start-line="58" selection-start-column="61" selection-end-line="58" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommandCenter/SwarmData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+            <marker date="1539143911605" expanded="true" signature="53:54" ph="..." />
+            <marker date="1539143911605" expanded="true" signature="264:323" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
@@ -475,29 +485,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="58" column="61" selection-start-line="58" selection-start-column="61" selection-end-line="58" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CommandCenter/SwarmData.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-283">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-            <marker date="1539143911605" expanded="true" signature="53:54" ph="..." />
-            <marker date="1539143911605" expanded="true" signature="264:323" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="22" column="31" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+        <state relative-caret-position="540">
+          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
         </state>
       </provider>
     </entry>
