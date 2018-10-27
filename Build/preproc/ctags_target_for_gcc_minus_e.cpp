@@ -14,8 +14,8 @@
 
 #define enc0A 34
 #define enc0B 39
-#define cutoffA 3500
-#define cutoffB 3040
+#define cutoffA 2730
+#define cutoffB 2730
 
 const char *ssid = "DESKTOP-PTFSVRE 2560";
 const char *password = "E404h58]";
@@ -55,9 +55,13 @@ volatile bool motionenabled; // global motion enabling/disabling variable
 volatile long debounce_time = 0; // for debouncing
 volatile long current_time = 0; // for debouncing
 
-int pulsecount = 20;
+int pulsecountB = 16;
+int pulsecountA = 16;
 volatile int enc0Acount = 0;
 volatile int turnsA = 0;
+String tempmsg = "";
+char turnsAmsg[50];
+char turnsBmsg[50];
 volatile int turnsB = 0;
 volatile int enc0Bcount = 0;
 volatile bool oldstateA = false;
@@ -71,12 +75,12 @@ PubSubClient client(espClient);
 void callback(char *topic, byte *payload, unsigned int length)
 {
 
-  Serial.print("Message arrived in topic: ");
+  //Serial.print("Message arrived in topic: ");
   Serial.println(topic);
 
   if (String(topic) == "esp32/dir")
   {
-    Serial.println("Direction control char: " + (int)payload[0]);
+    //Serial.println("Direction control char: " + (int)payload[0]);
     hBridge((int)payload[0]);
   }
   else
@@ -84,14 +88,11 @@ void callback(char *topic, byte *payload, unsigned int length)
     Serial.println("Other topic!");
   }
 
-  Serial.print("Message: ");
+  //Serial.print("Message: ");
   for (int i = 0; i < length; i++)
   {
-    Serial.print((char)payload[i]);
+    Serial.println((char)payload[i]);
   }
-
-  Serial.println();
-  Serial.println("-----------------------");
 }
 
 // writeOut uses ledcWrite to write out the pattern at &src to the PWM channels
@@ -108,21 +109,18 @@ void writeOut(const int *src)
 // 2. disables all motion commands in loop() by toggling a global boolean
 void toggleMotion()
 {
-  // current_time = millis();
-  // if ((current_time - debounce_time) > 800)
-  // {
-    Serial.println("X");
-    if (motionenabled)
-    {
-      motionenabled = false;
-      hBridge(83 /* S*/);
-      client.publish("esp32/motion", "DISABLED");
-    }
-    else
-    {
-      motionenabled = true;
-      client.publish("esp32/motion", "ENABLED");
-    }
+  Serial.println("X");
+  if (motionenabled)
+  {
+    motionenabled = false;
+    hBridge(83 /* S*/);
+    client.publish("esp32/motion", "DISABLED");
+  }
+  else
+  {
+    motionenabled = true;
+    client.publish("esp32/motion", "ENABLED");
+  }
   //}
   //debounce_time = current_time;
   digitalWrite(motionLED, motionenabled);
@@ -144,46 +142,57 @@ void hBridge(int dir)
   case 83 /* S*/:
   {
     writeOut(Stop);
-    Serial.println("\t[S]");
+    Serial.println("[S]");
     break;
   }
   case 70 /* F*/:
   {
     writeOut(Forward);
-    Serial.println("\t[F]");
+    Serial.println("[F]");
     break;
   }
   case 66 /* B*/:
   {
     writeOut(Backward);
-    Serial.println("\t[B]");
+    Serial.println("[B]");
     break;
   }
   case 76 /* L*/:
   {
     writeOut(Left);
-    Serial.println("\t[L]");
+    Serial.println("[L]");
     break;
   }
   case 82 /* R*/:
   {
     writeOut(Right);
-    Serial.println("\t[R]");
+    Serial.println("[R]");
     break;
   }
   case 75 /* K*/:
   {
     writeOut(LeftBias);
-    Serial.println("\t[L-B]");
+    Serial.println("[LB]");
     break;
   }
   case 81 /* Q*/:
   {
     writeOut(RightBias);
-    Serial.println("\t[R-B]");
+    Serial.println("[RB]");
     break;
   }
   } // END switch
+  // Serial.println(turnsA);
+  // Serial.println(turnsB);
+  client.publish("esp32/turns", "X");
+  tempmsg = String(turnsA);
+  tempmsg.toCharArray(turnsAmsg, tempmsg.length() + 1);
+  tempmsg = String(turnsB);
+  tempmsg.toCharArray(turnsBmsg, tempmsg.length() + 1);
+  client.publish("esp32/turns", turnsAmsg);
+  client.publish("esp32/turns", turnsBmsg);
+  turnsA = 0;
+  turnsB = 0;
 } // END hBridge
 
 // reconnect loops until a connection is established with the MQTT broker
@@ -192,19 +201,17 @@ void reconnect()
   // Loop until we're reconnected
   while (!client.connected())
   {
-    Serial.print("Attempting MQTT connection...");
-    // Attempt to connect
+    Serial.print("Establishing MQTT...");
     if (client.connect("ESP32Client", mqttUser, mqttPassword))
     {
-      Serial.println("connected");
-      // Subscribe
+      Serial.println("Success!");
       client.subscribe("esp32/#");
+      client.publish("esp32/connected", "connected");
     }
     else
     {
-      Serial.print("failed, rc=");
+      Serial.print("MQTT failed. State: ");
       Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
       // Wait 5 seconds before retrying
       delay(5000);
     }
@@ -241,7 +248,7 @@ void setup()
     delay(500);
     Serial.println("Connecting to WiFi..");
   }
-  Serial.println("Connected to the WiFi network");
+  Serial.println("Connected to WiFi");
 
   client.setServer(mqttServer, mqttPort);
   client.setCallback(callback);
@@ -257,34 +264,44 @@ void loop()
 
   client.loop();
 
-  if(analogRead(34) > 3500) {
+  if (analogRead(34) > 2730)
+  {
     stateA = true;
-  } else {
+  }
+  else
+  {
     stateA = false;
   }
 
-  if (oldstateA != stateA) {
+  if (analogRead(39) > 2730)
+  {
+    stateB = true;
+  }
+  else
+  {
+    stateB = false;
+  }
+
+  if (oldstateA != stateA)
+  {
     enc0Acount++;
-    if (enc0Acount > pulsecount) {
+    if (enc0Acount > pulsecountA)
+    {
       enc0Acount = 0;
       turnsA++;
-      Serial.println("A");
+      //Serial.println("A");
     }
     oldstateA = stateA;
   }
 
-  if(analogRead(39) > 3040) {
-    stateB = true;
-  } else {
-    stateB = false;
-  }
-
-  if (oldstateB != stateB) {
+  if (oldstateB != stateB)
+  {
     enc0Bcount++;
-    if (enc0Bcount > pulsecount) {
+    if (enc0Bcount > pulsecountB)
+    {
       enc0Bcount = 0;
       turnsB++;
-      Serial.println("B");
+      //Serial.println("B");
     }
     oldstateB = stateB;
   }
