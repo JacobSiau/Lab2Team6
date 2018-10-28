@@ -26,5 +26,15 @@ client.connect("192.168.137.219", 1883, 60)
 # handles reconnecting.
 # Other loop*() functions are available that give a threaded interface and a
 # manual interface.
-client.loop_forever()
+# client.loop_forever()
+
+
+while True:
+    commands = ['F', 'B', 'L', 'R', 'S', 'M']
+    m = input("Command: ")
+    if m is 'x':
+        break
+    if m in commands:
+        client.publish("esp32/dir", str(m))
+
 
