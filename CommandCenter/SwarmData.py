@@ -1,5 +1,5 @@
 import requests as req
-
+from pprint import pprint
 
 class SwarmData:
 
@@ -8,14 +8,14 @@ class SwarmData:
         'ball': (),
         'corners': {},
         'red': {
-            'circle',
-            'square',
-            'triangle'
+            'circle': (),
+            'square': (),
+            'triangle': ()
         },
         'blue': {
-            'circle',
-            'square',
-            'triangle'
+            'circle': (),
+            'square': (),
+            'triangle': ()
         }
     }
     oldpositions = {}
@@ -25,13 +25,14 @@ class SwarmData:
     @staticmethod
     def pixelMap(__self__, px, py):
         # getting max, min and range for x and y positions
-        xmin = min(__self__.positions.corners.X)
-        xmax = max(__self__.positions.corners.X)
-        ymin = min(__self__.positions.corners.Y)
-        ymax = max(__self__.positions.corners.Y)
+        xmin = min(i['X'] for i in __self__.positions['corners'])
+        xmax = max(i['X'] for i in __self__.positions['corners'])
+        ymin = min(i['Y'] for i in __self__.positions['corners'])
+        ymax = max(i['Y'] for i in __self__.positions['corners'])
         xrange = xmax - xmin
         yrange = ymax - ymin
-        return 8 * (px - xmin) / xrange, 4 * (1 - (py - ymin) / yrange)
+        return round(8 * (px - xmin) / xrange, 2), \
+               round(4 * (1 - (py - ymin) / yrange), 2)
 
     @staticmethod
     def getData(__self__):
@@ -39,38 +40,51 @@ class SwarmData:
         __self__.oldpositions = __self__.positions
         # getting the new data
         data = req.get(__self__.url).json()
-        # easier object names and access
-        __self__.positions.ball = (data['Ball']['Object Center']['X'],
-                                   data['Ball']['Object Center']['Y'])
-        __self__.positions.corners = data['Corners']
-        __self__.positions.red = {
-            'circle': __self__.pixelMap(
-                data['Red Team Data']['Circle']['Object Center']['X'],
-                data['Red Team Data']['Circle']['Object Center']['Y']
-            ),
-            'square': __self__.pixelMap(
-                data['Red Team Data']['Square']['Object Center']['X'],
-                data['Red Team Data']['Square']['Object Center']['Y']
-            ),
-            'triangle': __self__.pixelMap(
-                data['Red Team Data']['Triangle']['Object Center']['X'],
-                data['Red Team Data']['Triangle']['Object Center']['Y']
-            )
-        }
-        __self__.positions.blue = {
-            'circle': __self__.pixelMap(
-                data['Blue Team Data']['Circle']['Object Center']['X'],
-                data['Blue Team Data']['Circle']['Object Center']['Y']
-            ),
-            'square': __self__.pixelMap(
-                data['Blue Team Data']['Square']['Object Center']['X'],
-                data['Blue Team Data']['Square']['Object Center']['Y']
-            ),
-            'triangle': __self__.pixelMap(
-                data['Blue Team Data']['Triangle']['Object Center']['X'],
-                data['Blue Team Data']['Triangle']['Object Center']['Y']
-            )
-        }
+        # filling up class member variables
+        __self__.positions['corners'] = data['Corners']
+        __self__.positions['ball'] = __self__.pixelMap(
+            __self__,
+            data['Ball']['Object Center']['X'],
+            data['Ball']['Object Center']['Y'])
+        __self__.positions['red']['circle'] = __self__.pixelMap(
+            __self__,
+            data['Red Team Data']['Circle']['Object Center']['X'],
+            data['Red Team Data']['Circle']['Object Center']['Y'])
+        __self__.positions['red']['square'] = __self__.pixelMap(
+            __self__,
+            data['Red Team Data']['Square']['Object Center']['X'],
+            data['Red Team Data']['Square']['Object Center']['Y'])
+        __self__.positions['red']['triangle'] = __self__.pixelMap(
+            __self__,
+            data['Red Team Data']['Triangle']['Object Center']['X'],
+            data['Red Team Data']['Triangle']['Object Center']['Y'])
+        __self__.positions['blue']['circle'] = __self__.pixelMap(
+            __self__,
+            data['Blue Team Data']['Circle']['Object Center']['X'],
+            data['Blue Team Data']['Circle']['Object Center']['Y'])
+        __self__.positions['blue']['square'] = __self__.pixelMap(
+            __self__,
+            data['Blue Team Data']['Square']['Object Center']['X'],
+            data['Blue Team Data']['Square']['Object Center']['Y'])
+        __self__.positions['blue']['triangle'] = __self__.pixelMap(
+            __self__,
+            data['Blue Team Data']['Triangle']['Object Center']['X'],
+            data['Blue Team Data']['Triangle']['Object Center']['Y'])
+
+    @staticmethod
+    def displayBall(__self__):
+        print("Ball: " + str(__self__.positions['ball']))
+
+    @staticmethod
+    def displayRed(__self__):
+        print("Red Team Data:")
+        pprint(__self__.positions['red'])
+
+    @staticmethod
+    def displayBlue(__self__):
+        print("Blue Team Data:")
+        pprint(__self__.positions['blue'])
+
 
 
 
