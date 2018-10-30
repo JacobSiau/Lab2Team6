@@ -18,7 +18,7 @@ class SwarmData:
             'triangle': ()
         }
     }
-    oldpositions = {}
+    oldpositions = None
 
     # pixelMap maps a pixel pair (px, py) to a real coordinate pair (rx, ry).
     # The ranges are 0<=rx<=8 and 0<=ry<=4
@@ -31,8 +31,8 @@ class SwarmData:
         ymax = max(i['Y'] for i in __self__.positions['corners'])
         xrange = xmax - xmin
         yrange = ymax - ymin
-        return round(8 * (px - xmin) / xrange, 2), \
-               round(4 * (1 - (py - ymin) / yrange), 2)
+        return round(244 * (px - xmin) / xrange, 2), \
+               round(122 * (1 - (py - ymin) / yrange), 2)
 
     @staticmethod
     def getData(__self__):
@@ -73,17 +73,25 @@ class SwarmData:
 
     @staticmethod
     def displayBall(__self__):
+        print("[Ball Data]\n")
         print("Ball: " + str(__self__.positions['ball']))
 
     @staticmethod
     def displayRed(__self__):
-        print("Red Team Data:")
-        pprint(__self__.positions['red'])
+        print("[Red Team Data]\n")
+        print("Circle: " + str(__self__.positions['red']['circle']))
+        print("Square: " + str(__self__.positions['red']['square']))
+        print("Triangle: " + str(__self__.positions['red']['triangle']))
 
     @staticmethod
     def displayBlue(__self__):
-        print("Blue Team Data:")
-        pprint(__self__.positions['blue'])
+        print("[Blue Team Data]\n")
+        print("Circle: " + str(__self__.positions['blue']['circle']))
+        print("Square: " + str(__self__.positions['blue']['square']))
+        print("Triangle: " + str(__self__.positions['blue']['triangle']))
+
+
+
 
 
 

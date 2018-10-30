@@ -29,8 +29,8 @@ const int Motors[4] = {12, 32, 27, 33}; // Motor output pins [A1N1, A1N2, B1N1, 
 //
 const int *Temp;
 const int Stop[4] = {0, 0, 0, 0};         // Stop pattern
-const int Forward[4] = {250, 0, 255, 0};  // Forward pattern
-const int Backward[4] = {0, 250, 0, 255}; // Backward pattern
+const int Forward[4] = {252, 0, 255, 0};  // Forward pattern
+const int Backward[4] = {0, 252, 0, 255}; // Backward pattern
 const int Right[4] = {250, 0, 0, 255};    // Left pattern
 const int Left[4] = {0, 250, 255, 0};     // Right pattern
 //const int RightBias[4] = {255, 125, 125, 255}; // Left Bias pattern
@@ -45,7 +45,8 @@ volatile bool motionenabled; // global motion enabling/disabling variable
 volatile unsigned long prev_time = 0;
 volatile unsigned long start_time = 0;
 volatile unsigned long current_time = 0;
-const unsigned long period = 2000;
+//const unsigned long period = 2000;
+volatile int time_ms = 0;
 //
 int pulsecountB = 16;
 int pulsecountA = 16;
@@ -67,12 +68,19 @@ PubSubClient client(espClient);
 void callback(char *topic, byte *payload, unsigned int length)
 {
   //Serial.print("Message arrived in topic: ");
-  Serial.println(topic);
 
   if (String(topic) == "esp32/dir")
   {
     //Serial.println("Direction control char: " + (int)payload[0]);
-    hBridge((int)payload[0]);
+    if (length < 5) {
+      //Serial.println("Payload too small");
+      hBridge((int) payload[0], 2, 0, 0, 0);
+    }
+    else {
+      //Serial.println("Payload just right");
+      hBridge((int)payload[0], (int)payload[1] - 48, (int)payload[2] - 48,
+      (int)payload[3] - 48, (int)payload[4] - 48);
+    }
     return;
   }
   // else
@@ -105,7 +113,7 @@ void toggleMotion()
   if (motionenabled)
   {
     motionenabled = false;
-    hBridge(hStop);
+    hBridge(hStop, 0, 0, 0, 0);
     client.publish("esp32/motion", "DISABLED");
   }
   else
@@ -117,8 +125,12 @@ void toggleMotion()
 }
 
 // Hbridge takes a integer representing a direction case and writes a pattern based on it
-void hBridge(int dir)
+void hBridge(int dir, int seconds, int hundredms, int tenms, int ms)
 {
+  time_ms = (seconds >= 0 && seconds <= 9) ? 1000 * seconds : 0;
+  time_ms = (hundredms >= 0 && hundredms <= 9) ? time_ms + 100 * hundredms : 0;
+  time_ms = (tenms >= 0 && tenms <= 9) ? time_ms + 10 * tenms : 0;
+  time_ms = (ms >= 0 && ms <= 9) ? time_ms + ms : 0;
   //writeOut(Stop);
   //delay(10);
   switch (dir)
@@ -130,7 +142,7 @@ void hBridge(int dir)
   }
   case hStop:
   {
-    Temp = Stop;
+    writeOut(Stop);
     //writeOut(Stop);
     //Serial.println("[S]");
     break;
@@ -164,9 +176,9 @@ void hBridge(int dir)
     break;
   }
   } // END switch
-
+  Serial.println(time_ms);
   start_time = millis();
-  while (millis() - start_time <= period)
+  while (millis() - start_time <= time_ms)
   {
     writeOut(Temp);
     updateTurns();
