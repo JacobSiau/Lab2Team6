@@ -2,17 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59617a02-4a6a-4856-a3c8-7119c358e716" name="Default Changelist" comment="Added WiFiTest to ESP32 Folder">
-      <change afterPath="$PROJECT_DIR$/CommandCenter/RobotMover.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/Test1.ino.bin" beforeDir="false" afterPath="$PROJECT_DIR$/Build/Test1.ino.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/Test1.ino.elf" beforeDir="false" afterPath="$PROJECT_DIR$/Build/Test1.ino.elf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/arduino.ar" beforeDir="false" afterPath="$PROJECT_DIR$/Build/arduino.ar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/preproc/ctags_target_for_gcc_minus_e.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Build/preproc/ctags_target_for_gcc_minus_e.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CommandCenter/CommandCenterMain.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/CommandCenterMain.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommandCenter/MQTTClient.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/MQTTClient.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommandCenter/SwarmData.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/SwarmData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommandCenter/RobotMover.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/RobotMover.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WeMos/Test1.ino" beforeDir="false" afterPath="$PROJECT_DIR$/WeMos/Test1.ino" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -62,7 +59,7 @@
         <counts>
           <entry key="dummy" value="76" />
           <entry key="md" value="162" />
-          <entry key="py" value="12993" />
+          <entry key="py" value="14539" />
           <entry key="txt" value="89" />
           <entry key="yaml" value="173" />
         </counts>
@@ -71,7 +68,7 @@
         <counts>
           <entry key="Markdown" value="162" />
           <entry key="PLAIN_TEXT" value="165" />
-          <entry key="Python" value="12993" />
+          <entry key="Python" value="14539" />
           <entry key="YAML" value="173" />
         </counts>
       </usages-collector>
@@ -79,29 +76,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="610">
-              <caret line="36" column="34" selection-start-line="36" selection-start-column="34" selection-end-line="36" selection-end-column="34" />
+            <state relative-caret-position="660">
+              <caret line="45" column="47" lean-forward="true" selection-start-line="45" selection-start-column="47" selection-end-line="45" selection-end-column="47" />
               <folding>
                 <element signature="e#0#52#0" expanded="true" />
-                <marker date="1540866756777" expanded="true" signature="215:421" ph="..." />
+                <marker date="1540872068378" expanded="true" signature="215:421" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CommandCenter/RobotMover.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="984">
-              <caret line="71" column="39" selection-start-line="71" selection-start-column="39" selection-end-line="71" selection-end-column="39" />
+            <state relative-caret-position="286">
+              <caret line="28" column="69" selection-start-line="28" selection-start-column="69" selection-end-line="28" selection-end-column="69" />
               <folding>
                 <element signature="e#0#47#0" expanded="true" />
-                <marker date="1540863704025" expanded="true" signature="101:102" ph="..." />
-                <marker date="1540863704025" expanded="true" signature="585:591" ph="..." />
-                <marker date="1540863704025" expanded="true" signature="653:662" ph="..." />
+                <marker date="1540873436352" expanded="true" signature="101:102" ph="..." />
+                <marker date="1540873436352" expanded="true" signature="800:930" ph="..." />
+                <marker date="1540873436352" expanded="true" signature="992:1001" ph="..." />
               </folding>
             </state>
           </provider>
@@ -171,13 +168,13 @@
         <option value="$PROJECT_DIR$/CommandCenter/MQTTClient2.py" />
         <option value="$PROJECT_DIR$/CommandCenter/RobotMotion.py" />
         <option value="$PROJECT_DIR$/CommandCenter/MQTTClient.py" />
-        <option value="$PROJECT_DIR$/CommandCenter/RobotMover.py" />
         <option value="$PROJECT_DIR$/CommandCenter/SwarmData.py" />
         <option value="$PROJECT_DIR$/CommandCenter/CommandCenterMain.py" />
+        <option value="$PROJECT_DIR$/CommandCenter/RobotMover.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="206" />
     <option name="y" value="-11" />
     <option name="width" value="1377" />
@@ -402,7 +399,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info active="true" anchor="right" id="Run" order="3" sideWeight="0.4989775" visible="true" weight="0.47014925" />
+      <window_info active="true" anchor="right" id="Run" order="3" sideWeight="0.4989775" visible="true" weight="0.37473348" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -506,26 +503,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CommandCenter/RobotMover.py">
+    <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="984">
-          <caret line="71" column="39" selection-start-line="71" selection-start-column="39" selection-end-line="71" selection-end-column="39" />
+        <state relative-caret-position="660">
+          <caret line="45" column="47" lean-forward="true" selection-start-line="45" selection-start-column="47" selection-end-line="45" selection-end-column="47" />
           <folding>
-            <element signature="e#0#47#0" expanded="true" />
-            <marker date="1540863704025" expanded="true" signature="101:102" ph="..." />
-            <marker date="1540863704025" expanded="true" signature="585:591" ph="..." />
-            <marker date="1540863704025" expanded="true" signature="653:662" ph="..." />
+            <element signature="e#0#52#0" expanded="true" />
+            <marker date="1540872068378" expanded="true" signature="215:421" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
+    <entry file="file://$PROJECT_DIR$/CommandCenter/RobotMover.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="610">
-          <caret line="36" column="34" selection-start-line="36" selection-start-column="34" selection-end-line="36" selection-end-column="34" />
+        <state relative-caret-position="286">
+          <caret line="28" column="69" selection-start-line="28" selection-start-column="69" selection-end-line="28" selection-end-column="69" />
           <folding>
-            <element signature="e#0#52#0" expanded="true" />
-            <marker date="1540866756777" expanded="true" signature="215:421" ph="..." />
+            <element signature="e#0#47#0" expanded="true" />
+            <marker date="1540873436352" expanded="true" signature="101:102" ph="..." />
+            <marker date="1540873436352" expanded="true" signature="800:930" ph="..." />
+            <marker date="1540873436352" expanded="true" signature="992:1001" ph="..." />
           </folding>
         </state>
       </provider>

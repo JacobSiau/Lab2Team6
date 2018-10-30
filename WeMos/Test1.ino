@@ -29,8 +29,8 @@ const int Motors[4] = {12, 32, 27, 33}; // Motor output pins [A1N1, A1N2, B1N1, 
 //
 const int *Temp;
 const int Stop[4] = {0, 0, 0, 0};         // Stop pattern
-const int Forward[4] = {252, 0, 255, 0};  // Forward pattern
-const int Backward[4] = {0, 252, 0, 255}; // Backward pattern
+const int Forward[4] = {252, 0, 254, 0};  // Forward pattern
+const int Backward[4] = {0, 252, 0, 254}; // Backward pattern
 const int Right[4] = {250, 0, 0, 255};    // Left pattern
 const int Left[4] = {0, 250, 255, 0};     // Right pattern
 //const int RightBias[4] = {255, 125, 125, 255}; // Left Bias pattern
