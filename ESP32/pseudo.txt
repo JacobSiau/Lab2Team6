@@ -1,0 +1,43 @@
+// MAIN COMMAND PROGRAM 
+
+robot is blue circle
+color, shape is input of destination's color/shape
+
+go is true
+while go is true:
+    refresh CV data and put into key:value pairs
+    grab robot (xr,yr) by predefined shape/color 
+    grab destination (xf, yf) by input color/shape
+    i = 0 to move robot or anything else to refresh CV data 
+    if i is 0:
+        call moveToPoint(xr, yr, xf, yf)
+        refresh is false
+
+////////////////////////////////////////////
+// moveToPoint 
+def moveToPoint(xo, yo, xf, yf):
+    // robot is initially pointing in the +x direction
+    calculate required dx and dy 
+    goForward(dx)
+    if dy is negative turn right 90*
+    else turn left 90*
+    goForward(dy)
+////////////////////////////////////////////
+
+////////////////////////////////////////////
+// goForward
+vforward = 50.45 // cm/s 
+def goForward(dx):
+    dt := dx / vforward // the time required to move robot dx
+    convert dt to a valid 5-char string 
+    publish forward, dt to esp32/dir 
+    sleep for dt seconds
+////////////////////////////////////////////
+
+////////////////////////////////////////////
+// turnLeft (turnRight)
+dt := 0.25 // 0.25 seconds for a 90 degree turn 
+def turnLeft():
+    publish left(right), dt to esp32/dir
+    sleep for 1 second
+////////////////////////////////////////////

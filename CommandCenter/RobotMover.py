@@ -5,12 +5,18 @@ from math import ceil
 
 class RobotMover:
 
+    # experimentally found forward speed
     vlinear = 50.45 # cm/s
+    # experimentally found time to turn 90 degrees
     tquarter = 0.26 # s
 
+    #################################################################################
     # moveToPoint moves the rover from a point xo,yo to a point xf, yf
+    # it does this by moving the rover straight, turning the rover left or right,
+    # and then moving the rover straight again
     @staticmethod
     def moveToPoint(__self__, xo, yo, xf, yf, m: MQTTClient):
+        # how far it needs to go
         dx = round(xf - xo, 2)
         print("Robot needs to change x by: " + str(dx))
         dy = round(yf - yo, 2)
@@ -24,7 +30,9 @@ class RobotMover:
             __self__.turnLeft(__self__, m)
         # go straight in the y-direction
         __self__.goForward(__self__, abs(dy), m)
+    #################################################################################
 
+    #################################################################################
     # goForward moves the rover forward a distance dx
     # it does this by publishing the correct motor direction and time
     @staticmethod
@@ -60,7 +68,11 @@ class RobotMover:
         m.publish(m, "esp32/dir", "F" + timestr)
         m.publish(m, "esp32/status", "forward")
         time.sleep(ceil(dtnum))
+    #################################################################################
 
+    #################################################################################
+    # turnLeft turns the rover left by 90 degrees (roughly)
+    # it does this by sending a hardcoded turn time to the left
     @staticmethod
     def turnLeft(__self__, m: MQTTClient):
         # turns the robot left 90 degrees
@@ -69,7 +81,11 @@ class RobotMover:
         print("Turning Left!")
         m.publish(m, "esp32/status", "left90")
         time.sleep(1)
+    #################################################################################
 
+    #################################################################################
+    # turnRight turns the rover right by 90 degrees (roughly)
+    # it does this by sending a hardcoded turn time to the right
     @staticmethod
     def turnRight(__self__, m: MQTTClient):
         # turns the robot right 90 degrees
@@ -78,3 +94,4 @@ class RobotMover:
         print("Turning Right!")
         m.publish(m, "esp32/status", "right90")
         time.sleep(1)
+    #################################################################################

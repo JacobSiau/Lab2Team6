@@ -14,14 +14,14 @@
 #define hPWMa 45 /* -*/
 #define hPWMb 43 /* +*/
 //
-#define enc0A 34
-#define enc0B 39
-#define cutoffA 2730
-#define cutoffB 2730
+#define enc0A 34 /* A2*/
+#define enc0B 39 /* A3*/
+#define cutoffA 2100
+#define cutoffB 2100
 //
 const char *ssid = "DESKTOP-PTFSVRE 2560";
 const char *password = "E404h58]";
-IPAddress mqttServer(192, 168, 137, 219);
+IPAddress mqttServer(192, 168, 137, 1);
 //
 const int mqttPort = 1883;
 const char *mqttUser = 
@@ -35,14 +35,15 @@ const char *mqttPassword =
 # 26 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                               ;
 //
-const int Motors[4] = {12, 32, 27, 33}; // Motor output pins [A1N1, A1N2, B1N1, B1N2]
+// Motor output:    [A1N1,A1N2,B1N2,B1N1]
+const int Motors[4] = {12, 32, 27, 33};
 //
 const int *Temp;
 const int Stop[4] = {0, 0, 0, 0}; // Stop pattern
-const int Forward[4] = {252, 0, 254, 0}; // Forward pattern
-const int Backward[4] = {0, 252, 0, 254}; // Backward pattern
-const int Right[4] = {250, 0, 0, 255}; // Left pattern
-const int Left[4] = {0, 250, 255, 0}; // Right pattern
+const int Forward[4] = {253, 0, 252, 0}; // Forward pattern
+const int Backward[4] = {0, 253, 0, 252}; // Backward pattern
+const int Right[4] = {253, 0, 0, 252}; // Left pattern
+const int Left[4] = {0, 253, 252, 0}; // Right pattern
 //const int RightBias[4] = {255, 125, 125, 255}; // Left Bias pattern
 //const int LeftBias[4] = {125, 255, 255, 125};  // Right Bias pattern
 //
@@ -58,15 +59,19 @@ volatile unsigned long current_time = 0;
 //const unsigned long period = 2000;
 volatile int time_ms = 0;
 //
-int pulsecountB = 16;
-int pulsecountA = 16;
+int pulsecountB = 25;
+int pulsecountA = 25;
 volatile int enc0Acount = 0;
+volatile int enc0Atotal = 0;
 volatile int enc0Bcount = 0;
+volatile int enc0Btotal = 0;
 volatile int turnsA = 0;
 volatile int turnsB = 0;
 String tempmsg = "";
 char turnsAmsg[50];
+char totalAmsg[50];
 char turnsBmsg[50];
+char totalBmsg[50];
 volatile bool oldstateA = false;
 volatile bool oldstateB = false;
 volatile bool stateA = false;
@@ -186,16 +191,16 @@ void hBridge(int dir, int seconds, int hundredms, int tenms, int ms)
     break;
   }
   } // END switch
-  Serial.println(time_ms);
+  //Serial.println(time_ms);
   start_time = millis();
   while (millis() - start_time <= time_ms)
   {
     writeOut(Temp);
     updateTurns();
   }
-  publishTurns();
   writeOut(Stop);
-
+  publishTurns();
+  resetTurns();
 } // END hBridge
 
 // reconnect loops until a connection is established with the MQTT broker
@@ -223,7 +228,7 @@ void reconnect()
 
 void updateTurns()
 {
-  if (analogRead(34) > 2730)
+  if (analogRead(34 /* A2*/) > 2100)
   {
     stateA = true;
   }
@@ -232,7 +237,7 @@ void updateTurns()
     stateA = false;
   }
 
-  if (analogRead(39) > 2730)
+  if (analogRead(39 /* A3*/) > 2100)
   {
     stateB = true;
   }
@@ -244,8 +249,10 @@ void updateTurns()
   if (oldstateA != stateA)
   {
     enc0Acount++;
+    enc0Atotal++;
     if (enc0Acount > pulsecountA)
     {
+      //Serial.println(enc0Acount);
       enc0Acount = 0;
       turnsA++;
     }
@@ -255,8 +262,10 @@ void updateTurns()
   if (oldstateB != stateB)
   {
     enc0Bcount++;
+    enc0Btotal++;
     if (enc0Bcount > pulsecountB)
     {
+      //Serial.println(enc0Bcount);
       enc0Bcount = 0;
       turnsB++;
     }
@@ -264,7 +273,7 @@ void updateTurns()
   }
 }
 
-// publishturns published the number of turns read on the encoders
+// publishTurns publishes the number of turns read on the encoders
 void publishTurns()
 {
   client.publish("esp32/turns", "X");
@@ -272,10 +281,25 @@ void publishTurns()
   tempmsg.toCharArray(turnsAmsg, tempmsg.length() + 1);
   tempmsg = String(turnsB);
   tempmsg.toCharArray(turnsBmsg, tempmsg.length() + 1);
+  tempmsg = String(enc0Atotal);
+  tempmsg.toCharArray(totalAmsg, tempmsg.length() + 1);
+  tempmsg = String(enc0Btotal);
+  tempmsg.toCharArray(totalBmsg, tempmsg.length() + 1);
   client.publish("esp32/turns", turnsAmsg);
   client.publish("esp32/turns", turnsBmsg);
+  client.publish("esp32/turns", totalAmsg);
+  client.publish("esp32/turns", totalBmsg);
+}
+
+// resetTurns resets everything 
+void resetTurns()
+{
   turnsA = 0;
   turnsB = 0;
+  enc0Atotal = 0;
+  enc0Btotal = 0;
+  stateA = false;
+  stateB = false;
 }
 
 // the main setup function of the Arduino program
