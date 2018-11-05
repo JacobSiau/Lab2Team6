@@ -16,8 +16,8 @@
 // Encoder Macros
 #define enc0A 34 // A2
 #define enc0B 39 // A3
-#define cutoffA 2100 // ~2.5V
-#define cutoffB 2100 // ~2.5V
+#define cutoffA 1000 // ~1.27 V
+#define cutoffB 1000 // 
 /////////////////////////////////////////////
 // MQTT Variables 
 IPAddress mqttServer(192, 168, 137, 1);
@@ -54,8 +54,8 @@ volatile unsigned long current_time = 0;
 volatile int time_ms = 0;
 /////////////////////////////////////////////
 // Encoder Variables
-int pulsecountB = 25; // num pulses for 1 rev of wheel B
-int pulsecountA = 25; // num pulses for 1 rev of wheel A
+int pulsecountB = 40; // num pulses for 1 rev of wheel B
+int pulsecountA = 40; // num pulses for 1 rev of wheel A
 volatile int enc0Acount = 0; // tracks A each turn
 volatile int enc0Atotal = 0; // tracks A each motion command
 volatile int enc0Bcount = 0;

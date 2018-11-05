@@ -2,7 +2,8 @@
 # 1 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 # 2 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 2
 # 3 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 2
-
+/////////////////////////////////////////////
+// HBridge Macros
 #define hStop 83 /* S*/
 #define hForward 70 /* F*/
 #define hBackward 66 /* B*/
@@ -13,16 +14,15 @@
 #define hToggle 77 /* M*/
 #define hPWMa 45 /* -*/
 #define hPWMb 43 /* +*/
-//
+/////////////////////////////////////////////
+// Encoder Macros
 #define enc0A 34 /* A2*/
 #define enc0B 39 /* A3*/
-#define cutoffA 2100
-#define cutoffB 2100
-//
-const char *ssid = "DESKTOP-PTFSVRE 2560";
-const char *password = "E404h58]";
+#define cutoffA 1000 /* ~1.27 V*/
+#define cutoffB 1000 /* */
+/////////////////////////////////////////////
+// MQTT Variables 
 IPAddress mqttServer(192, 168, 137, 1);
-//
 const int mqttPort = 1883;
 const char *mqttUser = 
 # 25 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
@@ -34,40 +34,45 @@ const char *mqttPassword =
                           __null
 # 26 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                               ;
-//
+/////////////////////////////////////////////
+// WiFi Variables
+const char *ssid = "DESKTOP-PTFSVRE 2560";
+const char *password = "E404h58]";
+WiFiClient espClient;
+PubSubClient client(espClient);
+/////////////////////////////////////////////
 // Motor output:    [A1N1,A1N2,B1N2,B1N1]
 const int Motors[4] = {12, 32, 27, 33};
-//
-const int *Temp;
-const int Stop[4] = {0, 0, 0, 0}; // Stop pattern
-const int Forward[4] = {253, 0, 252, 0}; // Forward pattern
-const int Backward[4] = {0, 253, 0, 252}; // Backward pattern
-const int Right[4] = {253, 0, 0, 252}; // Left pattern
-const int Left[4] = {0, 253, 252, 0}; // Right pattern
-//const int RightBias[4] = {255, 125, 125, 255}; // Left Bias pattern
-//const int LeftBias[4] = {125, 255, 255, 125};  // Right Bias pattern
-//
+/////////////////////////////////////////////
+// HBridge Output Patterns/PWM
+const int Stop[4] = {0, 0, 0, 0};
+const int Forward[4] = {253, 0, 252, 0};
+const int Backward[4] = {0, 253, 0, 252};
+const int Right[4] = {253, 0, 0, 252};
+const int Left[4] = {0, 253, 252, 0};
+const int *Temp; // Temp Pattern Holder
 const int freq = 30000; // PWM output frequency [Hz]
 const int res = 8; // resolution for PWM channels [b]
-//
+/////////////////////////////////////////////
+// Extra Variables
 byte motionLED = 13; // output LED for motion enabled TRUE/FALSE status
-volatile bool motionenabled; // global motion enabling/disabling variable
-//
+volatile bool motionenabled; // global motion enable/disable status
+// Timing Variables
 volatile unsigned long prev_time = 0;
 volatile unsigned long start_time = 0;
 volatile unsigned long current_time = 0;
-//const unsigned long period = 2000;
 volatile int time_ms = 0;
-//
-int pulsecountB = 25;
-int pulsecountA = 25;
-volatile int enc0Acount = 0;
-volatile int enc0Atotal = 0;
+/////////////////////////////////////////////
+// Encoder Variables
+int pulsecountB = 40; // num pulses for 1 rev of wheel B
+int pulsecountA = 40; // num pulses for 1 rev of wheel A
+volatile int enc0Acount = 0; // tracks A each turn
+volatile int enc0Atotal = 0; // tracks A each motion command
 volatile int enc0Bcount = 0;
 volatile int enc0Btotal = 0;
-volatile int turnsA = 0;
+volatile int turnsA = 0; // tracks number of turns
 volatile int turnsB = 0;
-String tempmsg = "";
+String tempmsg = ""; // manipulate this to publish
 char turnsAmsg[50];
 char totalAmsg[50];
 char turnsBmsg[50];
@@ -76,41 +81,28 @@ volatile bool oldstateA = false;
 volatile bool oldstateB = false;
 volatile bool stateA = false;
 volatile bool stateB = false;
-//
-WiFiClient espClient;
-PubSubClient client(espClient);
-//
+/////////////////////////////////////////////
+//////////////// FUNCTIONS //////////////////
+/////////////////////////////////////////////////////////////////////////
+// callback is called when an MQTT message is recieved 
 void callback(char *topic, byte *payload, unsigned int length)
 {
-  //Serial.print("Message arrived in topic: ");
-
   if (String(topic) == "esp32/dir")
   {
-    //Serial.println("Direction control char: " + (int)payload[0]);
+    // If we don't send enough of a msg for a time/dir command
     if (length < 5) {
-      //Serial.println("Payload too small");
       hBridge((int) payload[0], 2, 0, 0, 0);
     }
+    // If we sent enough, e.g. <dir><X000ms><X00ms><X0ms><Xms>
     else {
-      //Serial.println("Payload just right");
       hBridge((int)payload[0], (int)payload[1] - 48, (int)payload[2] - 48,
       (int)payload[3] - 48, (int)payload[4] - 48);
     }
     return;
   }
-  // else
-  // {
-  //   Serial.println("Other topic!");
-  // }
-
-  // //Serial.print("Message: ");
-  // for (int i = 0; i < length; i++)
-  // {
-  //   Serial.println((char)payload[i]);
-  // }
 }
-
-// writeOut uses ledcWrite to write out the pattern at &src to the PWM channels
+/////////////////////////////////////////////////////////////////////////
+// writeOut uses ledcWrite to write out the pattern found at src
 void writeOut(const int *src)
 {
   for (int i = 0; i < 4; i++)
@@ -118,10 +110,10 @@ void writeOut(const int *src)
     ledcWrite(i, src[i]);
   }
 }
-
+/////////////////////////////////////////////////////////////////////////
 // toggleMotion does the following:
-// 1. writes out the Stop command to the motors
-// 2. disables all motion commands in loop() by toggling a global boolean
+// -writes out the Stop command to the motors
+// -disables all motion commands in loop() by toggling a global boolean
 void toggleMotion()
 {
   Serial.println("X");
@@ -138,16 +130,18 @@ void toggleMotion()
   }
   digitalWrite(motionLED, motionenabled);
 }
-
-// Hbridge takes a integer representing a direction case and writes a pattern based on it
+/////////////////////////////////////////////////////////////////////////
+// hBridge takes the following pattern <dir><X000ms><X00ms><X0ms><Xms>
+// it then calculates the amount of time to run the command for 
+// it then writes out the pattern found by the char for that amount of time
 void hBridge(int dir, int seconds, int hundredms, int tenms, int ms)
 {
+  // calculating the time in ms
   time_ms = (seconds >= 0 && seconds <= 9) ? 1000 * seconds : 0;
   time_ms = (hundredms >= 0 && hundredms <= 9) ? time_ms + 100 * hundredms : 0;
   time_ms = (tenms >= 0 && tenms <= 9) ? time_ms + 10 * tenms : 0;
   time_ms = (ms >= 0 && ms <= 9) ? time_ms + ms : 0;
-  //writeOut(Stop);
-  //delay(10);
+  // what direction did we get told to go? 
   switch (dir)
   {
   case 77 /* M*/:
@@ -158,51 +152,42 @@ void hBridge(int dir, int seconds, int hundredms, int tenms, int ms)
   case 83 /* S*/:
   {
     writeOut(Stop);
-    //writeOut(Stop);
-    //Serial.println("[S]");
     break;
   }
   case 70 /* F*/:
   {
     Temp = Forward;
-    //writeOut(Forward);
-    //Serial.println("[F]");
     break;
   }
   case 66 /* B*/:
   {
     Temp = Backward;
-    //writeOut(Backward);
-    // Serial.println("[B]");
     break;
   }
   case 76 /* L*/:
   {
     Temp = Left;
-    //writeOut(Left);
-    // Serial.println("[L]");
     break;
   }
   case 82 /* R*/:
   {
     Temp = Right;
-    //writeOut(Right);
-    // Serial.println("[R]");
     break;
   }
   } // END switch
-  //Serial.println(time_ms);
+  // write out the correct pattern for the correct time 
   start_time = millis();
   while (millis() - start_time <= time_ms)
   {
     writeOut(Temp);
     updateTurns();
   }
+  // after writing it out, stop, publish info, and reset vars
   writeOut(Stop);
   publishTurns();
   resetTurns();
 } // END hBridge
-
+/////////////////////////////////////////////////////////////////////////
 // reconnect loops until a connection is established with the MQTT broker
 void reconnect()
 {
@@ -225,10 +210,15 @@ void reconnect()
     }
   }
 }
-
+/////////////////////////////////////////////////////////////////////////
+// updateTurns does the following:
+// -reads state of encoder input pins and determines if it is reading high/low 
+// -flips state of encoder if necessary
+// -counts the number of times it flips the state and saves as encoder counts
+// -if counts pass a certain cutoff, counts it as a turn of the wheel 
 void updateTurns()
 {
-  if (analogRead(34 /* A2*/) > 2100)
+  if (analogRead(34 /* A2*/) > 1000 /* ~1.27 V*/)
   {
     stateA = true;
   }
@@ -237,7 +227,7 @@ void updateTurns()
     stateA = false;
   }
 
-  if (analogRead(39 /* A3*/) > 2100)
+  if (analogRead(39 /* A3*/) > 1000 /* */)
   {
     stateB = true;
   }
@@ -252,7 +242,6 @@ void updateTurns()
     enc0Atotal++;
     if (enc0Acount > pulsecountA)
     {
-      //Serial.println(enc0Acount);
       enc0Acount = 0;
       turnsA++;
     }
@@ -265,14 +254,13 @@ void updateTurns()
     enc0Btotal++;
     if (enc0Bcount > pulsecountB)
     {
-      //Serial.println(enc0Bcount);
       enc0Bcount = 0;
       turnsB++;
     }
     oldstateB = stateB;
   }
 }
-
+/////////////////////////////////////////////////////////////////////////
 // publishTurns publishes the number of turns read on the encoders
 void publishTurns()
 {
@@ -290,8 +278,8 @@ void publishTurns()
   client.publish("esp32/turns", totalAmsg);
   client.publish("esp32/turns", totalBmsg);
 }
-
-// resetTurns resets everything 
+/////////////////////////////////////////////////////////////////////////
+// resetTurns resets the global encoder/turn variables
 void resetTurns()
 {
   turnsA = 0;
@@ -301,51 +289,45 @@ void resetTurns()
   stateA = false;
   stateB = false;
 }
-
-// the main setup function of the Arduino program
+/////////////////////////////////////////////////////////////////////////
+// setup is the main setup function of this Arduino program
 void setup()
 {
   Serial.begin(115200);
-
-  // 1. setting pinmodes (pin, OUTPUT/INPUT)
-  // 2. setting up PWM channels (channel, frequency, resolution)
-  // 3. setting pins to PWM-enabled channels (pin, channel)
+  // 1. set pinmodes (pin, OUTPUT/INPUT)
+  // 2. set up PWM channels (channel, frequency, resolution)
+  // 3. set pins to PWM-enabled channels (pin, channel)
   for (int i = 0; i < 4; i++)
   {
     pinMode(Motors[i], 0x02);
     ledcSetup(i, freq, res);
     ledcAttachPin(Motors[i], i);
   }
-
-  // 1. declaring the interrupt pin location
-  // 2. pointing to the ISR to be used upon interrupt on a digital I/O pin
+  // setting up the motion led/variable
   pinMode(motionLED, 0x02);
-  // pinMode(enc0A, INPUT);
-  // pinMode(enc0B, INPUT);
   motionenabled = true;
   digitalWrite(motionLED, 0x1);
-
+  // begin connecting to WiFi
   WiFi.begin(ssid, password);
-
+  // loop until connected
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
     Serial.println("Connecting to WiFi..");
   }
   Serial.println("Connected to WiFi");
-
+  // once connected to WiFi, set MQTT for connection
   client.setServer(mqttServer, mqttPort);
   client.setCallback(callback);
 }
-
-// the main loop function of the Arduino program
+/////////////////////////////////////////////////////////////////////////
+// loop is the main loop function of the Arduino program
 void loop()
 {
   if (!client.connected())
   {
     reconnect();
   }
-
   client.loop();
-
-} // END main loop
+}
+/////////////////////////////////////////////////////////////////////////
