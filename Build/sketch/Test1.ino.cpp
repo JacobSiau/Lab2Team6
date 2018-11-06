@@ -17,10 +17,10 @@
 #define hPWMb 43   // +
 /////////////////////////////////////////////
 // Encoder Macros
-#define enc0A 34 // A2
-#define enc0B 39 // A3
-#define cutoffA 1000 // ~1.27 V
-#define cutoffB 1000 // 
+#define enc0A 34 
+#define enc0B 36 
+#define cutoffA 1240 // ~1 V
+#define cutoffB 1240 // 
 /////////////////////////////////////////////
 // MQTT Variables 
 IPAddress mqttServer(192, 168, 137, 1);
@@ -57,14 +57,14 @@ volatile unsigned long current_time = 0;
 volatile int time_ms = 0;
 /////////////////////////////////////////////
 // Encoder Variables
-int pulsecountB = 40; // num pulses for 1 rev of wheel B
-int pulsecountA = 40; // num pulses for 1 rev of wheel A
-volatile int enc0Acount = 0; // tracks A each turn
+//int pulsecountB = 42; // num pulses for 1 rev of wheel B
+//int pulsecountA = 42; // num pulses for 1 rev of wheel A
+//volatile int enc0Acount = 0; // tracks A each turn
 volatile int enc0Atotal = 0; // tracks A each motion command
-volatile int enc0Bcount = 0;
+//volatile int enc0Bcount = 0;
 volatile int enc0Btotal = 0;
-volatile int turnsA = 0; // tracks number of turns
-volatile int turnsB = 0;
+//volatile int turnsA = 0; // tracks number of turns
+//volatile int turnsB = 0;
 String tempmsg = ""; // manipulate this to publish
 char turnsAmsg[50];
 char totalAmsg[50];
@@ -86,17 +86,17 @@ void writeOut(const int *src);
 void toggleMotion();
 #line 127 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void hBridge(int dir, int seconds, int hundredms, int tenms, int ms);
-#line 182 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 187 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void reconnect();
-#line 209 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 213 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void updateTurns();
-#line 255 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 248 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void publishTurns();
-#line 273 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 266 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void resetTurns();
-#line 284 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 277 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void setup();
-#line 315 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+#line 310 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void loop();
 #line 78 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 void callback(char *topic, byte *payload, unsigned int length)
@@ -190,14 +190,19 @@ void hBridge(int dir, int seconds, int hundredms, int tenms, int ms)
   }
   } // END switch
   // write out the correct pattern for the correct time 
+  writeOut(Temp);
   start_time = millis();
   while (millis() - start_time <= time_ms)
   {
-    writeOut(Temp);
     updateTurns();
   } 
   // after writing it out, stop, publish info, and reset vars
   writeOut(Stop);
+  start_time = millis();
+  while (millis() - start_time <= 150)
+  {
+    updateTurns();
+  }
   publishTurns();
   resetTurns();
 } // END hBridge
@@ -228,8 +233,7 @@ void reconnect()
 // updateTurns does the following:
 // -reads state of encoder input pins and determines if it is reading high/low 
 // -flips state of encoder if necessary
-// -counts the number of times it flips the state and saves as encoder counts
-// -if counts pass a certain cutoff, counts it as a turn of the wheel 
+// -counts the number of times it flips the state and saves as encoder counts 
 void updateTurns()
 {
   if (analogRead(enc0A) > cutoffA)
@@ -252,43 +256,32 @@ void updateTurns()
 
   if (oldstateA != stateA)
   {
-    enc0Acount++;
     enc0Atotal++;
-    if (enc0Acount > pulsecountA)
-    {
-      enc0Acount = 0;
-      turnsA++;
-    }
     oldstateA = stateA;
   }
 
   if (oldstateB != stateB)
   {
-    enc0Bcount++;
     enc0Btotal++;
-    if (enc0Bcount > pulsecountB)
-    {
-      enc0Bcount = 0;
-      turnsB++;
-    }
     oldstateB = stateB;
   }
 }
+
 /////////////////////////////////////////////////////////////////////////
 // publishTurns publishes the number of turns read on the encoders
 void publishTurns()
 {
   client.publish("esp32/turns", "X");
-  tempmsg = String(turnsA);
-  tempmsg.toCharArray(turnsAmsg, tempmsg.length() + 1);
-  tempmsg = String(turnsB);
-  tempmsg.toCharArray(turnsBmsg, tempmsg.length() + 1);
+  // tempmsg = String(turnsA);
+  // tempmsg.toCharArray(turnsAmsg, tempmsg.length() + 1);
+  // tempmsg = String(turnsB);
+  // tempmsg.toCharArray(turnsBmsg, tempmsg.length() + 1);
   tempmsg = String(enc0Atotal);
   tempmsg.toCharArray(totalAmsg, tempmsg.length() + 1);
   tempmsg = String(enc0Btotal);
   tempmsg.toCharArray(totalBmsg, tempmsg.length() + 1);
-  client.publish("esp32/turns", turnsAmsg);
-  client.publish("esp32/turns", turnsBmsg);
+  // client.publish("esp32/turns", turnsAmsg);
+  // client.publish("esp32/turns", turnsBmsg);
   client.publish("esp32/turns", totalAmsg);
   client.publish("esp32/turns", totalBmsg);
 }
@@ -296,8 +289,8 @@ void publishTurns()
 // resetTurns resets the global encoder/turn variables
 void resetTurns() 
 {
-  turnsA = 0;
-  turnsB = 0;
+  // turnsA = 0;
+  // turnsB = 0;
   enc0Atotal = 0;
   enc0Btotal = 0;
   stateA = false;
@@ -319,6 +312,8 @@ void setup()
   }
   // setting up the motion led/variable
   pinMode(motionLED, OUTPUT);
+  pinMode(enc0A, INPUT);
+  pinMode(enc0B, INPUT);
   motionenabled = true;
   digitalWrite(motionLED, HIGH);
   // begin connecting to WiFi
