@@ -6,7 +6,7 @@ import paho.mqtt.client as mqtt
 class MQTTClient:
 
     client = mqtt.Client()
-    ip = "192.168.137.219"
+    ip = "192.168.137.1"
     port = 1883
     refresh = 60
 

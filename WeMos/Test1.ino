@@ -1,14 +1,16 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <algorithm>
 /////////////////////////////////////////////
 // HBridge Macros
 #define hStop 83     // S
+#define hTurn 84     // T
 #define hForward 70  // F
 #define hBackward 66 // B
 #define hLeft 76     // L
 #define hRight 82    // R
-// #define hLeftB 75    // K
-// #define hRightB 81   // Q
+#define hLeftW 75    // K
+#define hRightW 81   // Q
 #define hToggle 77 // M
 #define hPWMa 45   // -
 #define hPWMb 43   // +
@@ -38,9 +40,12 @@ const int Motors[4] = {12, 32, 27, 33};
 const int Stop[4] = {0, 0, 0, 0};        
 const int Forward[4] = {253, 0, 252, 0};  
 const int Backward[4] = {0, 253, 0, 252}; 
-const int Right[4] = {253, 0, 0, 252};    
+const int Right[4] = {253, 0, 0, 252};
+const int RightWide[4] = {253, 0, 0, 0};    
 const int Left[4] = {0, 253, 252, 0};    
+const int LeftWide[4] = {0, 0, 253, 0};
 const int *Temp; // Temp Pattern Holder
+const int *TempCount;
 const int freq = 30000; // PWM output frequency [Hz]
 const int res = 8;      // resolution for PWM channels [b]
 /////////////////////////////////////////////
@@ -79,16 +84,15 @@ void callback(char *topic, byte *payload, unsigned int length)
 {
   if (String(topic) == "esp32/dir")
   { 
-    // If we don't send enough of a msg for a time/dir command
-    if (length < 5) {
-      hBridge((int) payload[0], 2, 0, 0, 0);
-    }
-    // If we sent enough, e.g. <dir><X000ms><X00ms><X0ms><Xms>
-    else {
-      hBridge((int)payload[0], (int)payload[1] - 48, (int)payload[2] - 48,
-      (int)payload[3] - 48, (int)payload[4] - 48);
-    }
-    return;
+    hBridge((int)payload[0], (int)payload[1] - 48, (int)payload[2] - 48,
+    (int)payload[3] - 48, (int)payload[4] - 48);
+  }
+  else if (String(topic) == "esp32/testdir")
+  {
+    int encount = (int)payload[1] - 48;
+    encount += 10 * ((int)payload[2] - 48);
+    encount += 100 * ((int)payload[3] - 48);
+    hBridge2((int)payload[0], encount);
   }
 }
 /////////////////////////////////////////////////////////////////////////
@@ -119,6 +123,77 @@ void toggleMotion()
     client.publish("esp32/motion", "ENABLED");
   }
   digitalWrite(motionLED, motionenabled);
+}
+/////////////////////////////////////////////////////////////////////////
+// hBridge2 takes in a direction character and a count
+// it will write out the corresponding motion command
+// until it reads that count on the encoders
+void hBridge2(int dir, int encount) 
+{
+  switch (dir) 
+  {
+  case hForward:
+  {
+    Temp = Forward;
+    break;
+  }
+  case hBackward:
+  {
+    Temp = Backward;
+    break;
+  }
+  case hLeft:
+  {
+    Temp = Left;
+    break;
+  }
+  case hRight:
+  {
+    Temp = Right;
+    break;
+  }
+  case hLeftW: 
+  {
+    Temp = LeftWide;
+    break;
+  }
+  case hRightW: 
+  {
+    Temp = RightWide;
+    break;
+  }
+  } // END switch
+  encount += 3;
+  writeOut(Temp);
+  if (dir == hLeftW) {
+    while (enc0Btotal < encount) 
+    {
+      updateTurns();
+    }
+    writeOut(Stop);
+    publishTurns();
+    resetTurns();
+    return;
+  }
+  else if (dir == hRightW) {
+    while (enc0Atotal < encount) 
+    {
+      updateTurns();
+    }
+    writeOut(Stop);
+    publishTurns();
+    resetTurns();
+    return;
+  }
+  else {
+    while (std::min(enc0Atotal, enc0Btotal) < encount) 
+    {
+      updateTurns();
+    }
+    writeOut(Stop);
+    publishTurns();
+    resetTurns();
+  }
 }
 /////////////////////////////////////////////////////////////////////////
 // hBridge takes the following pattern <dir><X000ms><X00ms><X0ms><Xms>

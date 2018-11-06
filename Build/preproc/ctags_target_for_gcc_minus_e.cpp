@@ -2,15 +2,19 @@
 # 1 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 # 2 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 2
 # 3 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 2
+# 4 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 2
+
+# 4 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
 /////////////////////////////////////////////
 // HBridge Macros
 #define hStop 83 /* S*/
+#define hTurn 84 /* T*/
 #define hForward 70 /* F*/
 #define hBackward 66 /* B*/
 #define hLeft 76 /* L*/
 #define hRight 82 /* R*/
-// #define hLeftB 75    // K
-// #define hRightB 81   // Q
+#define hLeftW 75 /* K*/
+#define hRightW 81 /* Q*/
 #define hToggle 77 /* M*/
 #define hPWMa 45 /* -*/
 #define hPWMb 43 /* +*/
@@ -25,14 +29,14 @@
 IPAddress mqttServer(192, 168, 137, 1);
 const int mqttPort = 1883;
 const char *mqttUser = 
-# 25 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
+# 27 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
                       __null
-# 25 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+# 27 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                           ;
 const char *mqttPassword = 
-# 26 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
+# 28 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino" 3 4
                           __null
-# 26 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
+# 28 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\WeMos\\Test1.ino"
                               ;
 /////////////////////////////////////////////
 // WiFi Variables
@@ -49,8 +53,11 @@ const int Stop[4] = {0, 0, 0, 0};
 const int Forward[4] = {253, 0, 252, 0};
 const int Backward[4] = {0, 253, 0, 252};
 const int Right[4] = {253, 0, 0, 252};
+const int RightWide[4] = {253, 0, 0, 0};
 const int Left[4] = {0, 253, 252, 0};
+const int LeftWide[4] = {0, 0, 253, 0};
 const int *Temp; // Temp Pattern Holder
+const int *TempCount;
 const int freq = 30000; // PWM output frequency [Hz]
 const int res = 8; // resolution for PWM channels [b]
 /////////////////////////////////////////////
@@ -89,16 +96,15 @@ void callback(char *topic, byte *payload, unsigned int length)
 {
   if (String(topic) == "esp32/dir")
   {
-    // If we don't send enough of a msg for a time/dir command
-    if (length < 5) {
-      hBridge((int) payload[0], 2, 0, 0, 0);
-    }
-    // If we sent enough, e.g. <dir><X000ms><X00ms><X0ms><Xms>
-    else {
-      hBridge((int)payload[0], (int)payload[1] - 48, (int)payload[2] - 48,
-      (int)payload[3] - 48, (int)payload[4] - 48);
-    }
-    return;
+    hBridge((int)payload[0], (int)payload[1] - 48, (int)payload[2] - 48,
+    (int)payload[3] - 48, (int)payload[4] - 48);
+  }
+  else if (String(topic) == "esp32/testdir")
+  {
+    int encount = (int)payload[1] - 48;
+    encount += 10 * ((int)payload[2] - 48);
+    encount += 100 * ((int)payload[3] - 48);
+    hBridge2((int)payload[0], encount);
   }
 }
 /////////////////////////////////////////////////////////////////////////
@@ -129,6 +135,77 @@ void toggleMotion()
     client.publish("esp32/motion", "ENABLED");
   }
   digitalWrite(motionLED, motionenabled);
+}
+/////////////////////////////////////////////////////////////////////////
+// hBridge2 takes in a direction character and a count
+// it will write out the corresponding motion command
+// until it reads that count on the encoders
+void hBridge2(int dir, int encount)
+{
+  switch (dir)
+  {
+  case 70 /* F*/:
+  {
+    Temp = Forward;
+    break;
+  }
+  case 66 /* B*/:
+  {
+    Temp = Backward;
+    break;
+  }
+  case 76 /* L*/:
+  {
+    Temp = Left;
+    break;
+  }
+  case 82 /* R*/:
+  {
+    Temp = Right;
+    break;
+  }
+  case 75 /* K*/:
+  {
+    Temp = LeftWide;
+    break;
+  }
+  case 81 /* Q*/:
+  {
+    Temp = RightWide;
+    break;
+  }
+  } // END switch
+  encount += 3;
+  writeOut(Temp);
+  if (dir == 75 /* K*/) {
+    while (enc0Btotal < encount)
+    {
+      updateTurns();
+    }
+    writeOut(Stop);
+    publishTurns();
+    resetTurns();
+    return;
+  }
+  else if (dir == 81 /* Q*/) {
+    while (enc0Atotal < encount)
+    {
+      updateTurns();
+    }
+    writeOut(Stop);
+    publishTurns();
+    resetTurns();
+    return;
+  }
+  else {
+    while (std::min(enc0Atotal, enc0Btotal) < encount)
+    {
+      updateTurns();
+    }
+    writeOut(Stop);
+    publishTurns();
+    resetTurns();
+  }
 }
 /////////////////////////////////////////////////////////////////////////
 // hBridge takes the following pattern <dir><X000ms><X00ms><X0ms><Xms>
