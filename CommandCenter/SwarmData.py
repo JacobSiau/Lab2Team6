@@ -4,7 +4,7 @@ from pprint import pprint
 
 class SwarmData:
 
-    url = "http://172.16.0.1:8001/FieldData/GetData"
+    url = "http://192.168.137.1:8001/FieldData/GetData"
     positions = {
         'ball': (),
         'corners': {},

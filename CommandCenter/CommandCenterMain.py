@@ -38,17 +38,14 @@ if __name__ == '__main__':
 
     M.connectMQTT(M)
 
-    testdist = 40 # cm
-
-    # forward testdist, turn 360, backward testdist, turn 360
-    R.goForward(R, testdist, M)
+    R.goForward(R, 40, M)
     R.turnLeftDegrees(R, 360, M)
-    R.turnRightDegrees(R, 360, M)
+    # R.turnRightDegrees(R, 360, M)
 
     #################################################################################
     # # Testing for CV data grabbing at a rate of 1s
     # while True:
-    #     time.sleep(1)
+    #     time.sleep(0.2)
     #     S.getData(S)
     #     print("-------------------")
     #     print("\n")

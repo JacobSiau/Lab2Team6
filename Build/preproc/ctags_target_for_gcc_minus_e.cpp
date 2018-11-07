@@ -23,9 +23,9 @@
 #define enc0A 34
 #define enc0B 36
 #define cutoffA 1240 /* ~1 V*/
-#define cutoffB 1240 /* */
+#define cutoffB 1240 /**/
 /////////////////////////////////////////////
-// MQTT Variables 
+// MQTT Variables
 IPAddress mqttServer(192, 168, 137, 1);
 const int mqttPort = 1883;
 const char *mqttUser = 
@@ -40,8 +40,8 @@ const char *mqttPassword =
                               ;
 /////////////////////////////////////////////
 // WiFi Variables
-const char *ssid = "DESKTOP-PTFSVRE 2560";
-const char *password = "E404h58]";
+const char *swarmID = "Team6Net2";
+const char *swarmpass = "team6pass";
 WiFiClient espClient;
 PubSubClient client(espClient);
 /////////////////////////////////////////////
@@ -91,19 +91,20 @@ volatile bool stateB = false;
 /////////////////////////////////////////////
 //////////////// FUNCTIONS //////////////////
 /////////////////////////////////////////////////////////////////////////
-// callback is called when an MQTT message is recieved 
+// callback is called when an MQTT message is recieved
 void callback(char *topic, byte *payload, unsigned int length)
 {
   if (String(topic) == "esp32/dir")
   {
     hBridge((int)payload[0], (int)payload[1] - 48, (int)payload[2] - 48,
-    (int)payload[3] - 48, (int)payload[4] - 48);
+            (int)payload[3] - 48, (int)payload[4] - 48);
   }
   else if (String(topic) == "esp32/testdir")
   {
-    int encount = (int)payload[1] - 48;
+    int encount = (int)payload[3] - 48;
     encount += 10 * ((int)payload[2] - 48);
-    encount += 100 * ((int)payload[3] - 48);
+    encount += 100 * ((int)payload[1] - 48);
+    Serial.println(encount);
     hBridge2((int)payload[0], encount);
   }
 }
@@ -146,70 +147,68 @@ void hBridge2(int dir, int encount)
   {
   case 70 /* F*/:
   {
-    Temp = Forward;
-    break;
-  }
-  case 66 /* B*/:
-  {
-    Temp = Backward;
-    break;
-  }
-  case 76 /* L*/:
-  {
-    Temp = Left;
-    break;
-  }
-  case 82 /* R*/:
-  {
-    Temp = Right;
-    break;
-  }
-  case 75 /* K*/:
-  {
-    Temp = LeftWide;
-    break;
-  }
-  case 81 /* Q*/:
-  {
-    Temp = RightWide;
-    break;
-  }
-  } // END switch
-  encount += 3;
-  writeOut(Temp);
-  if (dir == 75 /* K*/) {
-    while (enc0Btotal < encount)
-    {
-      updateTurns();
-    }
-    writeOut(Stop);
-    publishTurns();
-    resetTurns();
-    return;
-  }
-  else if (dir == 81 /* Q*/) {
-    while (enc0Atotal < encount)
-    {
-      updateTurns();
-    }
-    writeOut(Stop);
-    publishTurns();
-    resetTurns();
-    return;
-  }
-  else {
+    //Temp = Forward;
+    writeOut(Forward);
     while (std::min(enc0Atotal, enc0Btotal) < encount)
     {
       updateTurns();
     }
-    writeOut(Stop);
-    publishTurns();
-    resetTurns();
+    break;
   }
+  case 66 /* B*/:
+  {
+    //Temp = Backward;
+    writeOut(Backward);
+    while (std::min(enc0Atotal, enc0Btotal) < encount)
+    {
+      updateTurns();
+    }
+    break;
+  }
+  case 76 /* L*/:
+  {
+    //Temp = Left;
+    writeOut(Left);
+    break;
+  }
+  case 82 /* R*/:
+  {
+    //Temp = Right;
+    writeOut(Right);
+    break;
+  }
+  case 75 /* K*/:
+  {
+    Serial.println("hLeftW");
+    //Temp = LeftWide;
+    writeOut(LeftWide);
+    while (enc0Btotal < encount)
+    {
+      updateTurns();
+    }
+    Serial.println("hLeftW done");
+    break;
+  }
+  case 81 /* Q*/:
+  {
+    Serial.println("hRightW");
+    //Temp = RightWide;
+    writeOut(RightWide);
+    while (enc0Atotal < encount)
+    {
+      updateTurns();
+    }
+    Serial.println("hRightW done");
+    break;
+  }
+  } // END switch
+  writeOut(Stop);
+  publishTurns();
+  resetTurns();
 }
 /////////////////////////////////////////////////////////////////////////
 // hBridge takes the following pattern <dir><X000ms><X00ms><X0ms><Xms>
-// it then calculates the amount of time to run the command for 
+// it then calculates the amount of time to run the command for
 // it then writes out the pattern found by the char for that amount of time
 void hBridge(int dir, int seconds, int hundredms, int tenms, int ms)
 {
@@ -218,7 +217,7 @@ void hBridge(int dir, int seconds, int hundredms, int tenms, int ms)
   time_ms = (hundredms >= 0 && hundredms <= 9) ? time_ms + 100 * hundredms : 0;
   time_ms = (tenms >= 0 && tenms <= 9) ? time_ms + 10 * tenms : 0;
   time_ms = (ms >= 0 && ms <= 9) ? time_ms + ms : 0;
-  // what direction did we get told to go? 
+  // what direction did we get told to go?
   switch (dir)
   {
   case 77 /* M*/:
@@ -252,7 +251,7 @@ void hBridge(int dir, int seconds, int hundredms, int tenms, int ms)
     break;
   }
   } // END switch
-  // write out the correct pattern for the correct time 
+  // write out the correct pattern for the correct time
   writeOut(Temp);
   start_time = millis();
   while (millis() - start_time <= time_ms)
@@ -294,9 +293,9 @@ void reconnect()
 }
 /////////////////////////////////////////////////////////////////////////
 // updateTurns does the following:
-// -reads state of encoder input pins and determines if it is reading high/low 
+// -reads state of encoder input pins and determines if it is reading high/low
 // -flips state of encoder if necessary
-// -counts the number of times it flips the state and saves as encoder counts 
+// -counts the number of times it flips the state and saves as encoder counts
 void updateTurns()
 {
   if (analogRead(34) > 1240 /* ~1 V*/)
@@ -308,7 +307,7 @@ void updateTurns()
     stateA = false;
   }
 
-  if (analogRead(36) > 1240 /* */)
+  if (analogRead(36) > 1240 /**/)
   {
     stateB = true;
   }
@@ -380,7 +379,8 @@ void setup()
   motionenabled = true;
   digitalWrite(motionLED, 0x1);
   // begin connecting to WiFi
-  WiFi.begin(ssid, password);
+  WiFi.disconnect();
+  WiFi.begin(swarmID, swarmpass);
   // loop until connected
   while (WiFi.status() != WL_CONNECTED)
   {

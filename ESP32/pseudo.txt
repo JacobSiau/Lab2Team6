@@ -41,3 +41,31 @@ def turnLeft():
     publish left(right), dt to esp32/dir
     sleep for 1 second
 ////////////////////////////////////////////
+
+////////////////////////////////////////////
+// goToBall
+def goToBall():
+    determine target goal
+    determine x-coordinate of target goal
+    if not facing in x-dir:
+        turn 90 degrees
+    while robot.y < ball.y:
+        move in y-dir 
+    while robot.x < ball.x:
+        if IR.detect(ball): 
+            stop()
+        else: 
+            move in x-dir
+////////////////////////////////////////////
+
+////////////////////////////////////////////
+// aimBall
+def aimBall():
+    determine angle between ball and goal
+    while angle > 0 and IR(ball):
+        turn very slowly
+    if angle > 0:
+        find ball again 
+    move straight forward fast as heck for 0.5s
+    stop()
+////////////////////////////////////////////
