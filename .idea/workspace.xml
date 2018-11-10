@@ -12,7 +12,7 @@
       <change beforePath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Test1.ino.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CommandCenter/CommandCenterMain.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/CommandCenterMain.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CommandCenter/MQTTClient.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/MQTTClient.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommandCenter/SwarmData.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/SwarmData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ESP32/pseudo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ESP32/pseudo.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/WeMos/Test1.ino" beforeDir="false" afterPath="$PROJECT_DIR$/WeMos/Test1.ino" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -25,14 +25,14 @@
     <session id="-1730100430">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="14" />
+          <entry key="project.closed" value="15" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.14" value="1" />
           <entry key="project.open.time.15" value="2" />
           <entry key="project.open.time.16" value="1" />
-          <entry key="project.open.time.17" value="1" />
-          <entry key="project.open.time.18" value="1" />
+          <entry key="project.open.time.17" value="2" />
+          <entry key="project.open.time.18" value="2" />
           <entry key="project.open.time.19" value="1" />
           <entry key="project.open.time.20" value="1" />
           <entry key="project.open.time.22" value="1" />
@@ -44,7 +44,7 @@
           <entry key="project.open.time.7" value="1" />
           <entry key="project.open.time.71" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="21" />
+          <entry key="project.opened" value="23" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -67,7 +67,7 @@
         <counts>
           <entry key="dummy" value="76" />
           <entry key="md" value="162" />
-          <entry key="py" value="18022" />
+          <entry key="py" value="18201" />
           <entry key="txt" value="89" />
           <entry key="yaml" value="173" />
         </counts>
@@ -76,7 +76,7 @@
         <counts>
           <entry key="Markdown" value="162" />
           <entry key="PLAIN_TEXT" value="165" />
-          <entry key="Python" value="18022" />
+          <entry key="Python" value="18201" />
           <entry key="YAML" value="173" />
         </counts>
       </usages-collector>
@@ -84,14 +84,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="434">
+            <state relative-caret-position="352">
               <caret line="40" column="25" selection-start-line="40" selection-start-column="25" selection-end-line="40" selection-end-column="25" />
               <folding>
                 <element signature="e#0#52#0" expanded="true" />
-                <marker date="1541564197230" expanded="true" signature="168:171" ph="..." />
+                <marker date="1541834914061" expanded="true" signature="168:171" ph="..." />
               </folding>
             </state>
           </provider>
@@ -100,7 +100,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CommandCenter/RobotMover.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="104">
+            <state relative-caret-position="286">
               <caret line="98" selection-start-line="98" selection-end-line="98" />
               <folding>
                 <element signature="e#0#47#0" expanded="true" />
@@ -114,8 +114,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CommandCenter/SwarmData.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="902">
-              <caret line="41" column="30" selection-start-line="41" selection-start-column="30" selection-end-line="41" selection-end-column="30" />
+            <state relative-caret-position="110">
+              <caret line="6" column="31" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="31" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
                 <marker date="1541562459415" expanded="true" signature="67:68" ph="..." />
@@ -127,11 +127,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="8" column="25" lean-forward="true" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+            <state relative-caret-position="550">
+              <caret line="25" column="30" selection-start-line="25" selection-start-column="30" selection-end-line="25" selection-end-column="30" />
               <folding>
                 <element signature="e#0#50#0" expanded="true" />
               </folding>
@@ -195,10 +195,9 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="528" />
-    <option name="y" value="-14" />
-    <option name="width" value="1018" />
-    <option name="height" value="1048" />
+    <option name="x" value="-7" />
+    <option name="width" value="1004" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -399,7 +398,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.032665964" />
@@ -418,7 +417,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info active="true" anchor="right" id="Run" order="3" sideWeight="0.4989775" visible="true" weight="0.36300638" />
+      <window_info active="true" anchor="right" id="Run" order="3" sideWeight="0.4989775" visible="true" weight="0.31982943" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -501,29 +500,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="16" column="28" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CommandCenter/RobotMover.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="98" selection-start-line="98" selection-end-line="98" />
-          <folding>
-            <element signature="e#0#47#0" expanded="true" />
-            <marker date="1541478934698" expanded="true" signature="4028:4500" ph="..." />
-            <marker date="1541478934698" expanded="true" signature="5326:5335" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CommandCenter/SwarmData.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="902">
-          <caret line="41" column="30" selection-start-line="41" selection-start-column="30" selection-end-line="41" selection-end-column="30" />
+        <state relative-caret-position="110">
+          <caret line="6" column="31" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="31" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
             <marker date="1541562459415" expanded="true" signature="67:68" ph="..." />
@@ -534,23 +514,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
+    <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="434">
-          <caret line="40" column="25" selection-start-line="40" selection-start-column="25" selection-end-line="40" selection-end-column="25" />
+        <state relative-caret-position="352">
+          <caret line="16" column="28" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommandCenter/RobotMover.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="98" selection-start-line="98" selection-end-line="98" />
           <folding>
-            <element signature="e#0#52#0" expanded="true" />
-            <marker date="1541564197230" expanded="true" signature="168:171" ph="..." />
+            <element signature="e#0#47#0" expanded="true" />
+            <marker date="1541478934698" expanded="true" signature="4028:4500" ph="..." />
+            <marker date="1541478934698" expanded="true" signature="5326:5335" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CommandCenter/MQTTClient.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="25" lean-forward="true" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+        <state relative-caret-position="550">
+          <caret line="25" column="30" selection-start-line="25" selection-start-column="30" selection-end-line="25" selection-end-column="30" />
           <folding>
             <element signature="e#0#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="40" column="25" selection-start-line="40" selection-start-column="25" selection-end-line="40" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#52#0" expanded="true" />
+            <marker date="1541834914061" expanded="true" signature="168:171" ph="..." />
           </folding>
         </state>
       </provider>

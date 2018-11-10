@@ -69,3 +69,47 @@ def aimBall():
     move straight forward fast as heck for 0.5s
     stop()
 ////////////////////////////////////////////
+
+////////////////////////////////////////////
+// Command Center
+def main(): 
+    request CV data
+    convert to JSON
+    store in Python dictionary 
+////////////////////////////////////////////
+
+////////////////////////////////////////////
+// Huzzah 
+def main():
+    initialize Serial
+    initialize pins & PWM
+    while WiFi is not connected: 
+        try to connect 
+    while MQTT is not connected:
+        try to connect 
+    subscribe to all esp32/# topics 
+    if a message is recieved    
+        call control(topic, message)
+////////////////////////////////////////////
+
+////////////////////////////////////////////
+// Huzzah control 
+// control is called when a msg is recieved
+def control(topic, message):
+    if topic is dir:
+        parse message
+        call hBridge(dir_char)
+////////////////////////////////////////////
+
+////////////////////////////////////////////
+// Huzzah hBridge
+// dir is a character representing a direction
+def hBridge(dir):  
+    if dir is forward macro:
+        writeOut(forward control pattern)
+    elif dir is backward macro:
+        writeOut(backward control pattern)
+    .
+    .
+    .
+////////////////////////////////////////////

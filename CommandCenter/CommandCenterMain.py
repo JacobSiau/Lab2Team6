@@ -40,10 +40,10 @@ if __name__ == '__main__':
 
     R.goForward(R, 40, M)
     R.turnLeftDegrees(R, 360, M)
-    # R.turnRightDegrees(R, 360, M)
+    R.turnRightDegrees(R, 360, M)
 
     #################################################################################
-    # # Testing for CV data grabbing at a rate of 1s
+    # Testing for CV data grabbing at a rate of 1s
     # while True:
     #     time.sleep(0.2)
     #     S.getData(S)
