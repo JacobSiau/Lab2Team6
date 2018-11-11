@@ -48,15 +48,17 @@ const int Motors[4] = {12, 32, 27, 33};
 const int Stop[4] = {0, 0, 0, 0};
 const int Forward[4] = {253, 0, 252, 0};
 const int Backward[4] = {0, 253, 0, 252};
-const int Right[4] = {253, 0, 0, 252};
+const int Right[4] = {220, 0, 0, 210};
 const int RightWide[4] = {253, 0, 0, 0};
-const int Left[4] = {0, 253, 252, 0};
+const int Left[4] = {0, 220, 210, 0};
 const int LeftWide[4] = {0, 0, 253, 0};
 const int freq = 30000; // PWM output frequency [Hz]
 const int res = 8; // resolution for PWM channels [b]
+const byte mqttLED = 13; // red LED 
 /////////////////////////////////////////////
 // Timing Variables
 volatile unsigned long start_time = 0;
+volatile unsigned long cutoff_time = 10000UL;
 volatile int time_ms = 0;
 /////////////////////////////////////////////
 // Encoder Variables
@@ -84,10 +86,10 @@ void callback(char *topic, byte *payload, unsigned int length)
   }
   else if (String(topic) == "esp32/testdir")
   {
-    int encount = (int)payload[3] - 48;
-    encount += 10 * ((int)payload[2] - 48);
-    encount += 100 * ((int)payload[1] - 48);
-    Serial.println(encount);
+    int encount = (int)payload[4] - 48;
+    encount += 10 * ((int)payload[3] - 48);
+    encount += 100 * ((int)payload[2] - 48);
+    encount += 1000 * ((int)payload[1] - 48);
     hBridge2((int)payload[0], encount);
   }
 }
@@ -106,6 +108,8 @@ void writeOut(const int *src)
 // -stops when it reads that count on the encoders 
 void hBridge2(int dir, int encount)
 {
+  // Serial.println("hB2");
+  // Serial.println(encount);
   if (dir == 83 /* S*/)
   {
     writeOut(Stop);
@@ -116,54 +120,84 @@ void hBridge2(int dir, int encount)
   {
     case 70 /* F*/:
     {
+      //Serial.println("F");
       writeOut(Forward);
-      while (std::min(enc0Atotal, enc0Btotal) < encount)
-      {
-        readEncoders();
-      }
+      // while (std::min(enc0Atotal, enc0Btotal) < encount)
+      // {
+      //   readEncoders();
+      // }
       break;
     }
     case 66 /* B*/:
     {
+      //Serial.println("B");
       writeOut(Backward);
-      while (std::min(enc0Atotal, enc0Btotal) < encount)
-      {
-        readEncoders();
-      }
+      // while (std::min(enc0Atotal, enc0Btotal) < encount) 
+      // {
+      //   readEncoders();
+      // }
       break;
     }
-    case 75 /* K*/:
+    case 76 /* L*/:
     {
-      Serial.println("hLW");
-      writeOut(LeftWide);
-      while (enc0Btotal < encount)
-      {
-        readEncoders();
-      }
-      writeOut(Stop);
-      Serial.println("hLWd");
+      //Serial.println("L");
+      writeOut(Left);
       break;
     }
-    case 81 /* Q*/:
+    case 82 /* R*/:
     {
-      Serial.println("hRW");
-      writeOut(RightWide);
-      Serial.print("ea: ");
-      Serial.print(enc0Atotal);
-      while (enc0Atotal < encount)
-      {
-        Serial.println("RE");
-        readEncoders();
-      }
-      writeOut(Stop);
-      Serial.println("hRWd");
+      //Serial.println("R");
+      writeOut(Right);
       break;
     }
+    // case hLeftW:
+    // {
+    //   Serial.println("hLW");
+    //   start_time = millis();
+    //   writeOut(LeftWide);
+    //   while (enc0Btotal < encount) 
+    //   {
+    //     //readEncoders();
+    //     readEncoderB();
+    //     if (enc0Btotal < encount && start_time - millis() > cutoff_time) 
+    //     {
+    //       break;
+    //     }
+    //   }
+    //   writeOut(Stop);
+    //   Serial.println("hLWd");
+    //   break;
+    // }
+    // case hRightW:
+    // {
+    //   Serial.println("hRW");
+    //   start_time = millis();
+    //   writeOut(RightWide);
+    //   Serial.print("ea: ");
+    //   Serial.print(enc0Atotal);
+    //   while (enc0Atotal < encount) 
+    //   {
+    //     Serial.println("REA");
+    //     //readEncoders();
+    //     readEncoderA();
+    //     if (enc0Atotal < encount && (millis() - start_time > cutoff_time)) 
+    //     {
+    //       break;
+    //     }
+    //   }
+    //   writeOut(Stop);
+    //   Serial.println("hRWd");
+    //   break;
+    // }
     default:
     {
       writeOut(Stop);
     }
   } // END switch
+  while (std::min(enc0Atotal, enc0Btotal) < encount)
+  {
+    readEncoders();
+  }
   writeOut(Stop);
   publishAndResetTurns();
 }
@@ -214,6 +248,11 @@ void hBridge(int dir, int seconds, int hundredms, int tenms, int ms)
     case 81 /* Q*/:
     {
       writeOut(RightWide);
+      break;
+    }
+    default:
+    {
+      writeOut(Stop);
     }
   } // END switch
   // read encoders for time_ms ms
@@ -235,8 +274,9 @@ void reconnect()
     if (client.connect("ESP32Client", mqttUser, mqttPassword))
     {
       Serial.println("MQTT!");
-      client.subscribe("esp32/#");
-      client.publish("esp32/connected", "ESP32_connect");
+      client.subscribe("esp32/#", 1);
+      client.publish("esp32/connected", "ESP32");
+      digitalWrite(mqttLED, 0x1);
     }
     else
     {
@@ -296,9 +336,9 @@ void readEncodersForTime(int time_ms)
 // -counts the number of times it flips the state and saves as encoder counts
 void readEncoders()
 {
-  Serial.println("readEncoders");
-  Serial.println(enc0Atotal);
-  Serial.println(enc0Btotal);
+  // Serial.println("readEncoders");
+  // Serial.println(enc0Atotal);
+  // Serial.println(enc0Btotal);
   if (analogRead(34 /* A2*/) > 1240 /* ~1 V*/)
   {
     stateA = true;
@@ -360,13 +400,14 @@ void setup()
   }
   pinMode(34 /* A2*/, 0x01);
   pinMode(36 /* A4*/, 0x01);
+  pinMode(mqttLED, 0x02);
+  digitalWrite(mqttLED, 0x0);
   // begin connecting to WiFi
-  WiFi.disconnect();
   WiFi.begin(swarmID, swarmpass);
   // loop until connected
   while (WiFi.status() != WL_CONNECTED)
   {
-    delay(500);
+    delay(1000);
     Serial.println("WiFi...");
   }
   Serial.println("WiFi!");
@@ -380,6 +421,7 @@ void loop()
 {
   if (!client.connected())
   {
+    digitalWrite(mqttLED, 0x0);
     reconnect();
   }
   client.loop();

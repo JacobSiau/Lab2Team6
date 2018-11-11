@@ -5,7 +5,7 @@ import paho.mqtt.client as mqtt
 
 class MQTTClient:
 
-    client = mqtt.Client()
+    client = mqtt.Client(client_id="CC", clean_session=True)
     ip = "192.168.137.14"
     port = 1883
     refresh = 60
@@ -36,6 +36,7 @@ class MQTTClient:
         __self__.client.loop_start()
         # __self__.client.subscribe("esp32/#")
         __self__.client.publish("esp32/connected", "CC_connect")
+        time.sleep(1)
     #################################################################################
 
     #################################################################################
@@ -43,5 +44,5 @@ class MQTTClient:
     # it published a message to a topic, both of which are input as strings
     @staticmethod
     def publish(__self__, topic, msg):
-        __self__.client.publish(topic, msg)
+        __self__.client.publish(topic=topic, qos=1, payload=msg)
     #################################################################################

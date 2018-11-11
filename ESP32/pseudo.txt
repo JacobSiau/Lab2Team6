@@ -113,3 +113,35 @@ def hBridge(dir):
     .
     .
 ////////////////////////////////////////////
+
+Old go forward 
+# # moves the robot forward a distance dx
+        # # moves it at a speed of 50.45 cm/s
+        #
+        # # get the time to move the robot
+        # dtnum = round(dx / __self__.vlinear, 2)
+        print("goForward called for: " + str(dx) + " cm")
+        # print("Robot needs to move for " + str(dtnum) + "s to go " + str(dx) + " cm")
+        # # check if within range
+        # if dtnum < 0.0 or dtnum > 9.99:
+        #     print("ERROR: Forward time > 9s!")
+        #     return
+        # # dt will be a string in the form <#>.<#> or <#>.<#><#> etc..
+        # dt = str(float(dtnum))
+        # print("Double checking time to send: " + dt)
+        # # from here we know the str is 0.0 to 9.9 (numerically),
+        # # now we concatenate its digits without the decimal
+        # # to send to the robot
+        # timestr = ""
+        # for i in range(0, len(dt)):
+        #     if i is not 1:
+        #         timestr += dt[i]
+        # if len(timestr) is 3:
+        #     timestr += '0'
+        # if len(timestr) is 2:
+        #     timestr += '00'
+        # print("Time string being sent: " + timestr)
+        # # ready to send to robot
+        # m.publish(m, "esp32/dir", "F" + timestr)
+        # m.publish(m, "esp32/status", "forward")
+        # time.sleep(ceil(dtnum))
