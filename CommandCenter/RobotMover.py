@@ -5,12 +5,8 @@ from math import ceil, pi
 
 class RobotMover:
 
-    # experimentally found forward speed
-    vlinear = 50.45 # cm/s
-    # experimentally found time to turn 90 degrees
-    tquarter = 0.26 # s
     # robot wheel radius
-    r = 3.25 # cm
+    r = 3 # cm
 
     #################################################################################
     # moveToPoint moves the rover from a point xo,yo to a point xf, yf
@@ -50,7 +46,7 @@ class RobotMover:
     def goForward(__self__, dx, m: MQTTClient):
         # moves the robot forward a distance dx
         print("goForward called for: " + str(dx) + " cm")
-        encount = str(round((40 * dx) / (2*pi*__self__.r)))
+        encount = str(round((40 * (dx - 0.3*dx)) / (2*pi*__self__.r)))
         print("Encount: " + encount)
         if len(encount) is 1:
             encount = '000' + encount
@@ -71,10 +67,12 @@ class RobotMover:
         encount = str(round((40 * dx) / (2 * pi * __self__.r)))
         print("Encount: " + encount)
         if len(encount) is 1:
-            encount = '00' + encount
+            encount = '000' + encount
         elif len(encount) is 2:
+            encount = '00' + encount
+        if len(encount) is 3:
             encount = '0' + encount
-        if len(encount) > 3:
+        elif len(encount) > 4:
             print("Faulty encount!")
         print("Final encount: " + encount)
         m.publish(m, "esp32/testdir", "B" + encount)
@@ -86,7 +84,7 @@ class RobotMover:
     def turnLeft(__self__, m: MQTTClient):
         # turns the robot left 90 degrees
         print("Turning 90 Left!")
-        m.publish(m, "esp32/testdir", "L0014")
+        m.publish(m, "esp32/testdir", "K0029")
     #################################################################################
 
     #################################################################################
@@ -94,8 +92,8 @@ class RobotMover:
     @staticmethod
     def turnRight(__self__, m: MQTTClient):
         # turns the robot right 90 degrees
-        print("Turning 90 Right (270 Left)!")
-        m.publish(m, "esp32/testdir", "L0050")
+        print("Turning 90 Right!")
+        m.publish(m, "esp32/testdir", "Q0031")
     #################################################################################
 
     #################################################################################

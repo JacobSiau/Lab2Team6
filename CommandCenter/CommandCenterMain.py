@@ -8,8 +8,6 @@ if __name__ == '__main__':
 
     M.connectMQTT(M)
 
-    # xf, yf = 116.68, 62.64
-
     print("Time for the robot to score a goal")
 
     refresh = True
@@ -23,7 +21,7 @@ if __name__ == '__main__':
         print("\n")
         S.displayRed(S)
         print("-------------------")
-        robot = S.positions['blue']['square']
+        robot = S.positions['blue']['circle']
         ball = S.positions['ball']
         goal = (244, 61)
         print("Robot thinks its at " + str(robot[0]) + ", " + str(robot[1]))
@@ -33,7 +31,6 @@ if __name__ == '__main__':
         if i is '0':
             R.moveToPoint(R, robot[0], robot[1], ball[0], ball[1], M)
             refresh = False
-
 
 
 
