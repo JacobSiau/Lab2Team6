@@ -5,8 +5,14 @@ from math import ceil, pi
 
 class RobotMover:
 
-    # robot wheel radius
-    r = 3 # cm
+    wheel_radius = 3.25 # cm
+    early_stop_x = 15 # cm
+    tolerance_x = 15 # tolerance for x in cm
+    tolerance_y = 10 # tolerance for y in cm
+    move_topic = "esp32/m"
+    slow_topic = "esp32/r"
+    robot1_left90deg_msg = "K0029"
+    robot1_right90deg_msg = "Q0028"
 
     #################################################################################
     # moveToPoint moves the rover from a point xo,yo to a point xf, yf
@@ -15,49 +21,95 @@ class RobotMover:
     @staticmethod
     def moveToPoint(__self__, xo, yo, xf, yf, m: MQTTClient):
         # how far it needs to go
-        dx = round(xf - xo, 2)
+        dx = round(xf - xo, 2) - __self__.tolerance_x
         print("Robot needs to change x by: " + str(dx))
-        dy = round(yf - yo, 2)
+        dy = round(yf - yo, 2) - __self__.tolerance_y
         print("Robot needs to change y by: " + str(dy))
-        # turn right/left
-        if dy < 0:
-            __self__.turnRight(__self__, m)
-            time.sleep(2)
-            __self__.goForward(__self__, abs(dy), m)
-            time.sleep(2)
-            __self__.turnLeft(__self__, m)
-            time.sleep(2)
-            __self__.goForward(__self__, dx, m)
-        else:
-            __self__.turnLeft(__self__, m)
-            time.sleep(4)
-            __self__.goForward(__self__, abs(dy), m)
-            time.sleep(4)
-            __self__.turnRight(__self__, m)
-            time.sleep(4)
-            __self__.goForward(__self__, dx, m)
-            time.sleep(4)
+
+
+        # if dy < 0:
+        #     __self__.turnRobot(__self__, robot_num=1, direction='R', m=m)
+        #     time.sleep(3)
+        #     __self__.goForward(__self__, robot_num=1, dx=dy, m=m)
+        #     time.sleep(3)
+        #     __self__.turnRobot(__self__, robot_num=1, direction='L', m=m)
+        #     time.sleep(3)
+        #     __self__.goForward(__self__, robot_num=1, dx=dx, m=m)
+        #     time.sleep(3)
+        # else:
+        #     __self__.turnRobot(__self__, robot_num=1, direction='L', m=m)
+        #     time.sleep(3)
+        #     __self__.goForward(__self__, robot_num=1, dx=dy, m=m)
+        #     time.sleep(3)
+        #     __self__.turnRobot(__self__, robot_num=1, direction='R', m=m)
+        #     time.sleep(3)
+        #     __self__.goForward(__self__, robot_num=1, dx=dx, m=m)
+        #     time.sleep(3)
+
     #################################################################################
+
+    @staticmethod
+    def goForwardSlowly(__self__, robot_num, m: MQTTClient):
+        print("goForwardSlowly called")
+        if robot_num is not 1 or not 2:
+            print("Invalid robot_num passed: " + str(robot_num))
+            return
+        temp = __self__.slow_topic + str(robot_num)
+        m.publish(m, temp, "F")
+
+    @staticmethod
+    def stopRobot(__self__, robot_num, m: MQTTClient):
+        print("stopRobot called")
+        if robot_num is not 1 or not 2:
+            print("Invalid robot_num passed: " + str(robot_num))
+            return
+        temp = __self__.slow_topic + str(robot_num)
+        m.publish(m, temp, "S")
 
     #################################################################################
     # goForward moves the rover forward a distance dx
-    # it does this by publishing the correct motor direction and time
+    # it does this by publishing the correct motor direction and encoder count
     @staticmethod
-    def goForward(__self__, dx, m: MQTTClient):
-        # moves the robot forward a distance dx
-        print("goForward called for: " + str(dx) + " cm")
-        encount = str(round((40 * (dx - 0.3*dx)) / (2*pi*__self__.r)))
-        print("Encount: " + encount)
-        if len(encount) is 1:
-            encount = '000' + encount
-        elif len(encount) is 2:
-            encount = '00' + encount
-        if len(encount) is 3:
-            encount = '0' + encount
-        elif len(encount) > 4:
-            print("Faulty encount!")
-        print("Final encount: " + encount)
-        m.publish(m, "esp32/testdir", "F" + encount)
+    def goForward(__self__, robot_num, dx, m: MQTTClient):
+        print("goForward called")
+        if robot_num is not 1 or not 2:
+            print("Invalid robot_num passed: " + str(robot_num))
+            return
+        temp = __self__.move_topic + str(robot_num)
+        print("dx: " + str(dx))
+        print("temp: " + temp)
+        enc_count = str(round((40 * dx) / (2*pi*__self__.wheel_radius)))
+        print("enc_count: " + enc_count)
+        if len(enc_count) is 1:
+            enc_count = '000' + enc_count
+        elif len(enc_count) is 2:
+            enc_count = '00' + enc_count
+        if len(enc_count) is 3:
+            enc_count = '0' + enc_count
+        elif len(enc_count) > 4:
+            print("Faulty enc_count!")
+        print("Final enc_count: " + enc_count)
+        m.publish(m, temp, "F" + enc_count)
+    #################################################################################
+
+    #################################################################################
+    # turnRobot turns the robot left or right by 90 degrees (roughly)
+    @staticmethod
+    def turnRobot(__self__, robot_num, direction, m: MQTTClient):
+        print("turnRobot called")
+        if robot_num is not 1 or not 2:
+            print("Invalid robot_num passed: " + str(robot_num))
+            return
+        temp = __self__.move_topic + str(robot_num)
+        print("robot_num: " + str(robot_num) + ", topic: " + temp)
+        print("direction: " + str(direction))
+        if direction == 'L':
+            m.publish(m, temp, __self__.robot1_left90deg_msg)
+        elif direction == 'R':
+            m.publish(m, temp, __self__.robot1_right90deg_msg)
+        else:
+            print("Invalid direction passed: " + str(direction))
+        time.sleep(4)
     #################################################################################
 
     #################################################################################
@@ -75,47 +127,5 @@ class RobotMover:
         elif len(encount) > 4:
             print("Faulty encount!")
         print("Final encount: " + encount)
-        m.publish(m, "esp32/testdir", "B" + encount)
-    #################################################################################
-
-    #################################################################################
-    # turnLeft turns the rover left by 90 degrees (roughly)
-    @staticmethod
-    def turnLeft(__self__, m: MQTTClient):
-        # turns the robot left 90 degrees
-        print("Turning 90 Left!")
-        m.publish(m, "esp32/testdir", "K0029")
-    #################################################################################
-
-    #################################################################################
-    # turnRight turns the rover right by 90 degrees (roughly)
-    @staticmethod
-    def turnRight(__self__, m: MQTTClient):
-        # turns the robot right 90 degrees
-        print("Turning 90 Right!")
-        m.publish(m, "esp32/testdir", "Q0031")
-    #################################################################################
-
-    #################################################################################
-    def turnLeftDegrees(self, deg, m: MQTTClient):
-        encount = str(round((deg / 360) * 138.4))
-        print("Turning left " + str(deg) + " degrees, encount: " + str(encount))
-        m.publish(m, "esp32/testdir", "L" + encount)
-    #################################################################################
-
-    #################################################################################
-    def turnRightDegrees(self, deg, m: MQTTClient):
-        encount = str(round((deg / 360) * 138.4))
-        print("Turning right " + str(deg) + " degrees, encount: " + str(encount))
-        m.publish(m, "esp32/testdir", "R" + encount)
-    #################################################################################
-
-    #################################################################################
-    # stop stops the rover
-    # it does this by sending the stop character to the ESP32
-    @staticmethod
-    def stop(__self__, m: MQTTClient):
-        # stops the robot
-        print("Stopping!")
-        m.publish(m, "esp32/testdir", "S000")
+        m.publish(m, "esp32/m1", "B" + encount)
     #################################################################################

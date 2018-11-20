@@ -1,7 +1,7 @@
 {
-    "port": "COM4",
+    "port": "COM5",
     "board": "esp32:esp32:featheresp32",
     "configuration": "FlashFreq=80,UploadSpeed=921600,DebugLevel=none",
-    "sketch": "Robot2\\Robot2.ino",
+    "sketch": "Robot1\\Robot1.ino",
     "output": "./Build"
 }

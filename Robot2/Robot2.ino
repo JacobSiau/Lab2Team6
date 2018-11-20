@@ -19,15 +19,16 @@ using std::min;
 #define MOTORBT 90 // Z
 /////////////////////////////////////////////
 // Encoder Macros
-#define enc0A 21 
-#define enc0B 14
-// #define enc0A 34 // A2
-// #define enc0B 36 // A4
+#define enc0A 14 
+#define enc0B 21
 #define cutoffA 1240 // ~1 V
 #define cutoffB 1240 //
 /////////////////////////////////////////////
+// IR Pin 
+#define IRpin 34
+/////////////////////////////////////////////
 // MQTT Variables
-IPAddress mqttServer(192, 168, 137, 14);
+IPAddress mqttServer(192, 168, 137, 195);
 const int mqttPort = 1883;
 const char *mqttUser = NULL;
 const char *mqttPassword = NULL;
@@ -43,6 +44,7 @@ const int Motors[4] = {12, 32, 27, 33};
 /////////////////////////////////////////////
 // HBridge Output Patterns/PWM
 const int Stop[4] = {0, 0, 0, 0};
+const int Brake[4] = {255, 255, 255, 255};
 const int Forward[4] = {250, 0, 253, 0};
 const int Backward[4] = {0, 252, 0, 253};
 const int Right[4] = {220, 0, 0, 210};
@@ -51,10 +53,10 @@ const int RightWide[4] = {250, 0, 0, 0};
 const int LeftWide[4] = {0, 0, 252, 0};
 /////////////////////////////////////////////
 // Dynamic Output Patterns/PWM
-volatile int pwmA = 253;
-volatile int pwmB = 250;
+volatile int pwmA = 222; // 253
+volatile int pwmB = 220; // 252
 volatile int pwmAT = 220;
-volatile int pwmBT = 215;
+volatile int pwmBT = 220;
 const int freq = 30000; // PWM output frequency [Hz]
 const int res = 8;      // resolution for PWM channels [b]
 const byte mqttLED = 13; // red LED 
@@ -68,9 +70,7 @@ volatile int time_ms = 0;
 volatile int enc0Atotal = 0; // tracks A each motion command
 volatile int enc0Btotal = 0; // tracks B each motion command
 String tempmsg = ""; // manipulate this to publish
-char turnsAmsg[50];
 char totalAmsg[50];
-char turnsBmsg[50];
 char totalBmsg[50];
 volatile bool oldstateA = false;
 volatile bool oldstateB = false;
@@ -82,12 +82,8 @@ volatile bool stateB = false;
 // callback is called when an MQTT message is recieved by the client 
 void callback(char *topic, byte *payload, unsigned int length)
 {
-  if (String(topic) == "esp32/dir")
-  {
-    hBridge((int)payload[0], (int)payload[1] - 48, (int)payload[2] - 48,
-            (int)payload[3] - 48, (int)payload[4] - 48);
-  }
-  else if (String(topic) == "esp32/testdir")
+  String temp_topic = String(topic);
+  if (temp_topic == "esp32/m2")
   {
     int encount = (int)payload[4] - 48;
     encount += 10 * ((int)payload[3] - 48);
@@ -95,53 +91,80 @@ void callback(char *topic, byte *payload, unsigned int length)
     encount += 1000 * ((int)payload[1] - 48);
     hBridge2((int)payload[0], encount);
   }
-  else if (String(topic) == "esp32/pwm2") 
+  else if (temp_topic == "esp32/p2") 
   {
     int newPWM = (int)payload[3] - 48;
     newPWM += 10 * ((int)payload[2] - 48);
     newPWM += 100 * ((int)payload[1] - 48);
     updatePWM((int)payload[0], newPWM);
   }
+  else if (temp_topic == "esp32/findball") 
+  {
+    // // int Temp[4] = {pwmA, 0, pwmB, 0};
+    // Serial.println("findball");
+    // goForwardUntilBallDetected();
+    // // start_time = millis();
+    // // writeOut(Temp);
+    // // while (millis() - start_time < 700);
+    // // writeOut(Brake);
+    // // writeOut(Stop);
+  }
+}
+/////////////////////////////////////////////////////////////////////////
+// goForwardUntilBallDetected writes out Forward until it detects the ball
+void goForwardUntilBallDetected() 
+{
+  int Temp[4] = {pwmA, 0, pwmB, 0};
+  while (true) 
+  {
+  // while(analogRead(IRpin) < 3300)
+  // {
+    Serial.println(analogRead(IRpin));
+    writeOut(Temp);
+  }
+  // client.publish("esp32/status", "fb", true);
+  writeOut(Brake);
+  writeOut(Stop);
 }
 /////////////////////////////////////////////////////////////////////////
 // updatewPWM(motor, newpwm) 
 void updatePWM(int motor, int newPWM) 
 {
-    String temp = String(newPWM);
-    char tempmsg[50]; 
-    switch (motor) 
-    {
-        case MOTORA:
-        {
-            pwmA = newPWM;
-            temp += "R2A";
-            break;
-        }
-        case MOTORAT:
-        {
-            pwmAT = newPWM;
-            temp += "R2AT";
-            break;
-        }
-        case MOTORB: 
-        {
-            pwmB = newPWM;
-            temp += "R2B";
-            break;
-        }
-        case MOTORBT:
-        {
-            pwmBT = newPWM;
-            temp += "R2BT";
-            break;
-        }
-        default:
-        {
-            temp += "R2FAIL";
-        }
-    }
-    temp.toCharArray(tempmsg, temp.length() + 1);
-    client.publish("esp32/status", tempmsg, true);
+  String temp = String(newPWM);
+  char tempmsg[50]; 
+  switch (motor) 
+  {
+      case MOTORA:
+      {
+          pwmA = newPWM;
+          temp += "R2A";
+          break;
+      }
+      case MOTORAT:
+      {
+          pwmAT = newPWM;
+          temp += "R2AT";
+          break;
+      }
+      case MOTORB: 
+      {
+          pwmB = newPWM;
+          temp += "R2B";
+          break;
+      }
+      case MOTORBT:
+      {
+          pwmBT = newPWM;
+          temp += "R2BT";
+          break;
+      }
+      default:
+      {
+          temp += "R2FAIL";
+      }
+  }
+  temp.toCharArray(tempmsg, temp.length() + 1);
+  client.publish("esp32/s", tempmsg, true);
 }
 /////////////////////////////////////////////////////////////////////////
 // writeOut uses ledcWrite to write out the pattern found at src
@@ -158,22 +181,12 @@ void writeOut(const int *src)
 // -stops when it reads that count on the encoders 
 void hBridge2(int dir, int encount)
 {
-  // Serial.println("hB2");
-  // Serial.println(encount);
-  if (dir == hStop) 
-  {
-    writeOut(Stop);
-    return;
-  }
-  //
   switch (dir)
   {
     case hForward:
     {
-      //Serial.println("F");
       int Temp[4] = {pwmA, 0, pwmB, 0};
       writeOut(Temp);
-      //writeOut(Forward);
       while (std::min(enc0Atotal, enc0Btotal) < encount)
       {
         readEncoders();
@@ -184,7 +197,6 @@ void hBridge2(int dir, int encount)
     {
       int Temp[4] = {0, pwmA, 0, pwmB};
       writeOut(Temp);
-      // writeOut(Backward);
       while (std::min(enc0Atotal, enc0Btotal) < encount) 
       {
         readEncoders();
@@ -195,7 +207,6 @@ void hBridge2(int dir, int encount)
     {
       int Temp[4] = {0, pwmAT, pwmBT, 0};
       writeOut(Temp);
-      //writeOut(Left);
       while (std::min(enc0Atotal, enc0Btotal) < encount) 
       {
         readEncoders();
@@ -204,10 +215,8 @@ void hBridge2(int dir, int encount)
     }
     case hRight:
     {
-      //Serial.println("R");
       int Temp[4] = {pwmAT, 0, 0, pwmBT};
       writeOut(Temp);
-      //writeOut(Right);
       while (std::min(enc0Atotal, enc0Btotal) < encount) 
       {
         readEncoders();
@@ -216,10 +225,8 @@ void hBridge2(int dir, int encount)
     }
     case hLeftW:
     {
-      //Serial.println("hLW");
-      int Temp[4] = {0, 0, pwmBT, 0};
+      int Temp[4] = {255, 255, pwmBT, 0};
       writeOut(Temp);
-      //writeOut(LeftWide);
       while (enc0Btotal < encount) 
       {
         readEncoders();
@@ -228,10 +235,8 @@ void hBridge2(int dir, int encount)
     }
     case hRightW:
     {
-      //Serial.println("hRW");
-      int Temp[4] = {pwmAT, 0, 0, 0};
+      int Temp[4] = {pwmAT, 0, 255, 255};
       writeOut(Temp);
-      //writeOut(RightWide);
       while (enc0Atotal < encount) 
       {
         readEncoders();
@@ -243,84 +248,24 @@ void hBridge2(int dir, int encount)
       writeOut(Stop);
     }
   } // END switch
+  writeOut(Brake);
   writeOut(Stop);
   publishAndResetTurns();
 }
-/////////////////////////////////////////////////////////////////////////
-// hBridge takes the following pattern <dir><X000ms><X00ms><X0ms><Xms>
-// it then calculates the amount of time to run the command for
-// it then writes out the pattern found by the char for that amount of time
-void hBridge(int dir, int seconds, int hundredms, int tenms, int ms)
-{
-  if (dir == hStop) 
-  {
-    writeOut(Stop);
-    return;
-  }
-  // calculating the time in ms
-  time_ms = (seconds >= 0 && seconds <= 9) ? 1000 * seconds : 0;
-  time_ms = (hundredms >= 0 && hundredms <= 9) ? time_ms + 100 * hundredms : 0;
-  time_ms = (tenms >= 0 && tenms <= 9) ? time_ms + 10 * tenms : 0;
-  time_ms = (ms >= 0 && ms <= 9) ? time_ms + ms : 0;
-  // what direction did we get told to go?
-  switch (dir)
-  {
-    case hForward:
-    {
-      writeOut(Forward);
-      break;
-    }
-    case hBackward:
-    {
-      writeOut(Backward);
-      break;
-    }
-    case hLeft:
-    {
-      writeOut(Left);
-      break;
-    }
-    case hRight:
-    {
-      writeOut(Right);
-      break;
-    }
-    // case hLeftW:
-    // {
-    //   writeOut(LeftWide);
-    //   break;
-    // }
-    // case hRightW:
-    // {
-    //   writeOut(RightWide);
-    //   break;
-    // }
-    default:
-    {
-      writeOut(Stop);
-    }
-  } // END switch
-  // read encoders for time_ms ms
-  readEncodersForTime(time_ms);
-  // stop and read encoders further for 150ms
-  // this accounts for the turning of wheels while stopping 
-  writeOut(Stop);
-  readEncodersForTime(150); 
-  publishAndResetTurns();
-} // END hBridge
 /////////////////////////////////////////////////////////////////////////
 // reconnect loops until a connection is established with the MQTT broker
 void reconnect()
 {
   // Loop until we're reconnected
+  digitalWrite(mqttLED, LOW);
   while (!client.connected())
   {
     Serial.println("MQTT...");
-    if (client.connect("ESP32Client", mqttUser, mqttPassword))
+    if (client.connect("R2", mqttUser, mqttPassword))
     {
       Serial.println("MQTT!");
       client.subscribe("esp32/#", 1);
-      client.publish("esp32/connected", "R2");
+      client.publish("esp32/c", "R2");
       digitalWrite(mqttLED, HIGH);
     }
     else
@@ -333,57 +278,12 @@ void reconnect()
   }
 }
 /////////////////////////////////////////////////////////////////////////
-// readEncodersForTime does the following for a duration of time_ms [ms]
-// -reads state of encoder input pins and determines if it is reading high/low
-// -sets to true if high, else false 
-// -counts the number of times it flips the state and saves as encoder counts
-void readEncodersForTime(int time_ms)
-{
-  start_time = millis();
-  // while time is less than input time, read encoder states and update 
-  while (millis() - start_time <= time_ms) 
-  {
-    if (analogRead(enc0A) > cutoffA)
-    {
-      stateA = true;
-    }
-    else
-    {
-      stateA = false;
-    }
-
-    if (analogRead(enc0B) > cutoffB)
-    {
-      stateB = true;
-    }
-    else
-    {
-      stateB = false;
-    }
-
-    if (oldstateA != stateA)
-    {
-      enc0Atotal++;
-      oldstateA = stateA;
-    }
-
-    if (oldstateB != stateB)
-    {
-      enc0Btotal++;
-      oldstateB = stateB;
-    }
-  }
-}
-/////////////////////////////////////////////////////////////////////////
 // readEncoders does the following:
 // -reads state of encoder input pins and determines if it is reading high/low
 // -flips state of encoder if necessary
 // -counts the number of times it flips the state and saves as encoder counts
 void readEncoders()
 {
-  // Serial.println("readEncoders");
-  // Serial.println(enc0Atotal);
-  // Serial.println(enc0Btotal);
   if (digitalRead(enc0A)) 
   {
       stateA = true;
@@ -400,24 +300,6 @@ void readEncoders()
   {
       stateB = false;
   }
-//   if (analogRead(enc0A) > cutoffA)
-//   {
-//     stateA = true;
-//   }
-//   else
-//   {
-//     stateA = false;
-//   }
-
-//   if (analogRead(enc0B) > cutoffB)
-//   {
-//     stateB = true;
-//   }
-//   else
-//   {
-//     stateB = false;
-//   }
-
   if (oldstateA != stateA)
   {
     enc0Atotal++;
@@ -435,13 +317,13 @@ void readEncoders()
 // it then resets the turn variables 
 void publishAndResetTurns()
 {
-  client.publish("esp32/turns", "X");
+  client.publish("esp32/t", "T2", true);
   tempmsg = String(enc0Atotal);
   tempmsg.toCharArray(totalAmsg, tempmsg.length() + 1);
   tempmsg = String(enc0Btotal);
   tempmsg.toCharArray(totalBmsg, tempmsg.length() + 1);
-  client.publish("esp32/turns", totalAmsg);
-  client.publish("esp32/turns", totalBmsg);
+  client.publish("esp32/t", totalAmsg, true);
+  client.publish("esp32/t", totalBmsg, true);
   enc0Atotal = 0;
   enc0Btotal = 0;
   stateA = false;
@@ -461,6 +343,7 @@ void setup()
   }
   pinMode(enc0A, INPUT);
   pinMode(enc0B, INPUT);
+  pinMode(IRpin, INPUT);
   pinMode(mqttLED, OUTPUT);
   digitalWrite(mqttLED, LOW);
   // begin connecting to WiFi
@@ -480,11 +363,7 @@ void setup()
 // loop is the main loop function of this Arduino program
 void loop()
 {
-  if (!client.connected())
-  {
-    digitalWrite(mqttLED, LOW);
-    reconnect();
-  }
+  if (!client.connected()) reconnect();
   client.loop();
 }
 /////////////////////////////////////////////////////////////////////////

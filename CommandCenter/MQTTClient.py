@@ -6,7 +6,7 @@ import paho.mqtt.client as mqtt
 class MQTTClient:
 
     client = mqtt.Client(client_id="CC", clean_session=True)
-    ip = "192.168.137.14"
+    ip = "192.168.137.195"
     port = 1883
     refresh = 60
 
@@ -23,7 +23,8 @@ class MQTTClient:
     # it is linked to the client hereafter and is called when the client connects
     @staticmethod
     def onConnect(__self__, userdata, flags, rc):
-        print("MQTT Connected")
+        __self__.client.publish("esp32/c", "CC")
+        print("MQTT!")
     #################################################################################
 
     #################################################################################
@@ -32,11 +33,10 @@ class MQTTClient:
     @staticmethod
     def connectMQTT(__self__):
         __self__.client.on_connect = __self__.onConnect
-        __self__.client.connect(__self__.ip, __self__.port, __self__.refresh)
+        __self__.client.on_message = __self__.onMessage
+        __self__.client.connect_async(__self__.ip, __self__.port, __self__.refresh)
         __self__.client.loop_start()
-        # __self__.client.subscribe("esp32/#")
-        __self__.client.publish("esp32/connected", "CC_connect")
-        time.sleep(1)
+        # __self__.subscribe("esp32/#")
     #################################################################################
 
     #################################################################################
@@ -45,4 +45,12 @@ class MQTTClient:
     @staticmethod
     def publish(__self__, topic, msg):
         __self__.client.publish(topic=topic, qos=1, payload=msg)
+    #################################################################################
+
+    #################################################################################
+    # publish uses the built-in client publish function
+    # it published a message to a topic, both of which are input as strings
+    @staticmethod
+    def subscribe(__self__, topic):
+        __self__.client.subscribe(topic=topic, qos=1)
     #################################################################################
