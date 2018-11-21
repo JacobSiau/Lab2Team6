@@ -13,6 +13,8 @@ using std::min;
 #define hRightW 81   // Q
 /////////////////////////////////////////////
 // PWM Macros
+#define SMOTORA 85 // U
+#define SMOTORB 86 // V
 #define MOTORA 87 // W
 #define MOTORAT 88 // X
 #define MOTORB 89 // Y
@@ -53,18 +55,19 @@ const int RightWide[4] = {250, 0, 0, 0};
 const int LeftWide[4] = {0, 0, 252, 0};
 /////////////////////////////////////////////
 // Dynamic Output Patterns/PWM
-volatile int pwmA = 222; // 253
-volatile int pwmB = 220; // 252
+volatile int pwmA = 252;
+volatile int slowpwmA = 130;
+volatile int pwmB = 255;
+volatile int slowpwmB = 148;
 volatile int pwmAT = 220;
 volatile int pwmBT = 220;
-const int freq = 30000; // PWM output frequency [Hz]
+const int freq = 1000; // PWM output frequency [Hz]
 const int res = 8;      // resolution for PWM channels [b]
 const byte mqttLED = 13; // red LED 
 /////////////////////////////////////////////
 // Timing Variables
 volatile unsigned long start_time = 0;
 volatile unsigned long cutoff_time = 10000UL;
-volatile int time_ms = 0;
 /////////////////////////////////////////////
 // Encoder Variables
 volatile int enc0Atotal = 0; // tracks A each motion command
@@ -90,6 +93,15 @@ void callback(char *topic, byte *payload, unsigned int length)
     encount += 100 * ((int)payload[2] - 48);
     encount += 1000 * ((int)payload[1] - 48);
     hBridge2((int)payload[0], encount);
+  }
+  else if (temp_topic == "esp32/m2t")
+  {
+    hBridgeTimed((int)payload[0], (int)payload[1] - 48,
+    (int)payload[2] - 48, (int)payload[3] - 48, (int)payload[4] - 48);
+  }
+  else if (temp_topic == "esp32/r") 
+  {
+    hBridge3((int)payload[0]);
   }
   else if (temp_topic == "esp32/p2") 
   {
@@ -158,6 +170,18 @@ void updatePWM(int motor, int newPWM)
           temp += "R2BT";
           break;
       }
+      case SMOTORA:
+      {
+          slowpwmA = newPWM;
+          temp += "R2AS";
+          break;
+      }
+      case SMOTORB:
+      {
+          slowpwmB = newPWM;
+          temp += "R2BS";
+          break;
+      }
       default:
       {
           temp += "R2FAIL";
@@ -174,6 +198,89 @@ void writeOut(const int *src)
   {
     ledcWrite(i, src[i]);
   }
+}
+/////////////////////////////////////////////////////////////////////////
+// hBridgeTimed is hbridge for time 
+void hBridgeTimed(int dir, int t_1000ms, int t_100ms, int t_10ms, int t_1ms)
+{
+  int time_ms = (t_1000ms >= 0 && t_1000ms <= 9) ? 1000 * t_1000ms : 0;
+  time_ms = (t_100ms >= 0 && t_100ms <= 9) ? time_ms + 100 * t_100ms : 0;
+  time_ms = (t_10ms >= 0 && t_10ms <= 9) ? time_ms + 10 * t_10ms : 0;
+  time_ms = (t_1ms >= 0 && t_1ms <= 9) ? time_ms + t_1ms : 0;
+  switch (dir) 
+  {
+    case hForward:
+    {
+      int Temp[4] = {pwmA, 0, pwmB, 0};
+      writeOut(Temp);
+      break;
+    }
+    case hBackward:
+    {
+      int Temp[4] = {0, pwmA, 0, pwmB};
+      writeOut(Temp);
+      break;
+    }
+    case hLeft: 
+    {
+      int Temp[4] = {0, pwmAT, pwmBT, 0};
+      writeOut(Temp);
+      break;
+    }
+    case hRight: 
+    {
+      int Temp[4] = {pwmAT, 0, 0, pwmBT};
+      writeOut(Temp);
+      break;
+    }
+    case hLeftW:
+    {
+      int Temp[4] = {255, 255, pwmBT, 0};
+      writeOut(Temp);
+      break;
+    }
+    case hRightW:
+    {
+      int Temp[4] = {pwmAT, 0, 255, 255};
+      writeOut(Temp);
+      break;
+    }
+    default:
+    {
+      writeOut(Stop);
+    }
+  }
+  start_time = millis();
+  while (millis() - start_time <= time_ms);
+  writeOut(Brake);
+  writeOut(Stop);
+}
+/////////////////////////////////////////////////////////////////////////
+// hBridge3 is simple slow motion 
+void hBridge3(int dir) 
+{
+  switch (dir)
+  {
+    case hStop: // S
+    {
+      writeOut(Brake);
+      writeOut(Stop);
+      break;
+    }
+    case hForward: // F
+    {
+      int Temp[4] = {slowpwmA, 0, slowpwmB, 0};
+      writeOut(Temp);
+      break;
+    }
+    case hBackward: // B
+    {
+      int Temp[4] = {0, slowpwmA, 0, slowpwmB};
+      writeOut(Temp);
+      break;
+    }
+  }
+  publishAndResetTurns();
 }
 /////////////////////////////////////////////////////////////////////////
 // hBridge2 takes in a direction character and a count and:
@@ -213,7 +320,7 @@ void hBridge2(int dir, int encount)
       }
       break;
     }
-    case hRight:
+    case hRight: 
     {
       int Temp[4] = {pwmAT, 0, 0, pwmBT};
       writeOut(Temp);
