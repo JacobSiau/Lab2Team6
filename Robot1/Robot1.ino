@@ -96,7 +96,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     encount += 1000 * ((int)payload[1] - 48);
     hBridge2((int)payload[0], encount);
   }
-  else if (String(topic) == "esp32/r") 
+  else if (String(topic) == "esp32/r1") 
   {
     hBridge3((int)payload[0]);
   }

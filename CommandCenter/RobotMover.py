@@ -13,6 +13,8 @@ class RobotMover:
     slow_topic = "esp32/r"
     robot1_left90deg_msg = "K0029"
     robot1_right90deg_msg = "Q0028"
+    robot1_timedleft90deg_msg = "K0342"
+    robot1_timedright90deg_msg = "Q0352"
 
     #################################################################################
     # moveToPoint moves the rover from a point xo,yo to a point xf, yf
@@ -49,18 +51,27 @@ class RobotMover:
     #################################################################################
 
     @staticmethod
-    def goForwardSlowly(__self__, robot_num, m: MQTTClient):
-        print("goForwardSlowly called")
-        if robot_num is not 1 or not 2:
+    def goForwardNormally(__self__, robot_num, m: MQTTClient):
+        print("goForwardNormally called")
+        if robot_num != 1 and robot_num != 2:
             print("Invalid robot_num passed: " + str(robot_num))
             return
         temp = __self__.slow_topic + str(robot_num)
         m.publish(m, temp, "F")
 
     @staticmethod
+    def goForwardSlowly(__self__, robot_num, m: MQTTClient):
+        print("goForwardSlowly called")
+        if robot_num != 1 and robot_num != 2:
+            print("Invalid robot_num passed: " + str(robot_num))
+            return
+        temp = __self__.slow_topic + str(robot_num)
+        m.publish(m, temp, "G")
+
+    @staticmethod
     def stopRobot(__self__, robot_num, m: MQTTClient):
         print("stopRobot called")
-        if robot_num is not 1 or not 2:
+        if robot_num != 1 and robot_num != 2:
             print("Invalid robot_num passed: " + str(robot_num))
             return
         temp = __self__.slow_topic + str(robot_num)
@@ -72,12 +83,13 @@ class RobotMover:
     @staticmethod
     def goForward(__self__, robot_num, dx, m: MQTTClient):
         print("goForward called")
-        if robot_num is not 1 or not 2:
+        if robot_num != 1 and robot_num != 2:
             print("Invalid robot_num passed: " + str(robot_num))
             return
         temp = __self__.move_topic + str(robot_num)
         print("dx: " + str(dx))
         print("temp: " + temp)
+        # number of encoder counts to roll
         enc_count = str(round((40 * dx) / (2*pi*__self__.wheel_radius)))
         print("enc_count: " + enc_count)
         if len(enc_count) is 1:
@@ -97,16 +109,20 @@ class RobotMover:
     @staticmethod
     def turnRobot(__self__, robot_num, direction, m: MQTTClient):
         print("turnRobot called")
-        if robot_num is not 1 or not 2:
+        if robot_num != 1 and robot_num != 2:
             print("Invalid robot_num passed: " + str(robot_num))
             return
-        temp = __self__.move_topic + str(robot_num)
+        temp = ""
+        if robot_num is 1:
+            temp = "esp32/m1t"
+        else:
+            temp = "esp32/m2t"
         print("robot_num: " + str(robot_num) + ", topic: " + temp)
         print("direction: " + str(direction))
         if direction == 'L':
-            m.publish(m, temp, __self__.robot1_left90deg_msg)
+            m.publish(m, temp, __self__.robot1_timedleft90deg_msg)
         elif direction == 'R':
-            m.publish(m, temp, __self__.robot1_right90deg_msg)
+            m.publish(m, temp, __self__.robot1_timedright90deg_msg)
         else:
             print("Invalid direction passed: " + str(direction))
         time.sleep(4)

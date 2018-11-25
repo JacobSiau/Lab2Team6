@@ -8,6 +8,7 @@ using std::min;
 #define hStop 83 /* S*/
 #define hTurn 84 /* T*/
 #define hForward 70 /* F*/
+#define hForwardSlow 71 /* G*/
 #define hBackward 66 /* B*/
 #define hLeft 76 /* L*/
 #define hRight 82 /* R*/
@@ -35,14 +36,14 @@ using std::min;
 IPAddress mqttServer(192, 168, 137, 195);
 const int mqttPort = 1883;
 const char *mqttUser = 
-# 35 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino" 3 4
+# 36 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino" 3 4
                       __null
-# 35 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino"
+# 36 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino"
                           ;
 const char *mqttPassword = 
-# 36 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino" 3 4
+# 37 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino" 3 4
                           __null
-# 36 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino"
+# 37 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino"
                               ;
 /////////////////////////////////////////////
 // WiFi Variables
@@ -65,12 +66,12 @@ const int RightWide[4] = {250, 0, 0, 0};
 const int LeftWide[4] = {0, 0, 252, 0};
 /////////////////////////////////////////////
 // Dynamic Output Patterns/PWM
-volatile int pwmA = 252;
+volatile int pwmA = 253;
+volatile int pwmB = 254;
 volatile int slowpwmA = 130;
-volatile int pwmB = 255;
-volatile int slowpwmB = 148;
+volatile int slowpwmB = 144;
 volatile int pwmAT = 220;
-volatile int pwmBT = 220;
+volatile int pwmBT = 222;
 const int freq = 1000; // PWM output frequency [Hz]
 const int res = 8; // resolution for PWM channels [b]
 const byte mqttLED = 13; // red LED 
@@ -109,7 +110,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     hBridgeTimed((int)payload[0], (int)payload[1] - 48,
     (int)payload[2] - 48, (int)payload[3] - 48, (int)payload[4] - 48);
   }
-  else if (temp_topic == "esp32/r")
+  else if (temp_topic == "esp32/r2")
   {
     hBridge3((int)payload[0]);
   }
@@ -233,13 +234,13 @@ void hBridgeTimed(int dir, int t_1000ms, int t_100ms, int t_10ms, int t_1ms)
     }
     case 76 /* L*/:
     {
-      int Temp[4] = {0, pwmAT, pwmBT, 0};
+      int Temp[4] = {0, pwmA, pwmB, 0};
       writeOut(Temp);
       break;
     }
     case 82 /* R*/:
     {
-      int Temp[4] = {pwmAT, 0, 0, pwmBT};
+      int Temp[4] = {pwmA, 0, 0, pwmB};
       writeOut(Temp);
       break;
     }
@@ -277,9 +278,15 @@ void hBridge3(int dir)
       writeOut(Stop);
       break;
     }
-    case 70 /* F*/: // F
+    case 71 /* G*/:
     {
       int Temp[4] = {slowpwmA, 0, slowpwmB, 0};
+      writeOut(Temp);
+      break;
+    }
+    case 70 /* F*/: // F
+    {
+      int Temp[4] = {pwmA, 0, pwmB, 0};
       writeOut(Temp);
       break;
     }
@@ -290,7 +297,7 @@ void hBridge3(int dir)
       break;
     }
   }
-  publishAndResetTurns();
+  //publishAndResetTurns();
 }
 /////////////////////////////////////////////////////////////////////////
 // hBridge2 takes in a direction character and a count and:
