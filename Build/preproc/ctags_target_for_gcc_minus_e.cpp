@@ -1,7 +1,7 @@
-# 1 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino"
-# 1 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino"
-# 2 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino" 2
-# 3 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino" 2
+# 1 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot1\\Robot1.ino"
+# 1 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot1\\Robot1.ino"
+# 2 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot1\\Robot1.ino" 2
+# 3 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot1\\Robot1.ino" 2
 using std::min;
 /////////////////////////////////////////////
 // HBridge Macros
@@ -26,8 +26,6 @@ using std::min;
 // Encoder Macros
 #define enc0A 14
 #define enc0B 21
-#define cutoffA 1240 /* ~1 V*/
-#define cutoffB 1240 /**/
 /////////////////////////////////////////////
 // IR Pin 
 #define IRpin 34
@@ -36,14 +34,14 @@ using std::min;
 IPAddress mqttServer(192, 168, 137, 195);
 const int mqttPort = 1883;
 const char *mqttUser = 
-# 36 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino" 3 4
+# 34 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot1\\Robot1.ino" 3 4
                       __null
-# 36 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino"
+# 34 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot1\\Robot1.ino"
                           ;
 const char *mqttPassword = 
-# 37 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino" 3 4
+# 35 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot1\\Robot1.ino" 3 4
                           __null
-# 37 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot2\\Robot2.ino"
+# 35 "c:\\Users\\jacob\\PycharmProjects\\Team6Lab2\\Robot1\\Robot1.ino"
                               ;
 /////////////////////////////////////////////
 // WiFi Variables
@@ -66,12 +64,12 @@ const int RightWide[4] = {250, 0, 0, 0};
 const int LeftWide[4] = {0, 0, 252, 0};
 /////////////////////////////////////////////
 // Dynamic Output Patterns/PWM
-volatile int pwmA = 253;
-volatile int pwmB = 254;
-volatile int slowpwmA = 130;
-volatile int slowpwmB = 144;
+volatile int pwmA = 190;
+volatile int pwmB = 218;
+volatile int slowpwmA = 148;
+volatile int slowpwmB = 165;
 volatile int pwmAT = 220;
-volatile int pwmBT = 222;
+volatile int pwmBT = 220;
 const int freq = 1000; // PWM output frequency [Hz]
 const int res = 8; // resolution for PWM channels [b]
 const byte mqttLED = 13; // red LED 
@@ -97,7 +95,7 @@ volatile bool stateB = false;
 void callback(char *topic, byte *payload, unsigned int length)
 {
   String temp_topic = String(topic);
-  if (temp_topic == "esp32/m2")
+  if (temp_topic == "esp32/m1")
   {
     int encount = (int)payload[4] - 48;
     encount += 10 * ((int)payload[3] - 48);
@@ -105,16 +103,16 @@ void callback(char *topic, byte *payload, unsigned int length)
     encount += 1000 * ((int)payload[1] - 48);
     hBridge2((int)payload[0], encount);
   }
-  else if (temp_topic == "esp32/m2t")
+  else if (temp_topic == "esp32/m1t")
   {
     hBridgeTimed((int)payload[0], (int)payload[1] - 48,
     (int)payload[2] - 48, (int)payload[3] - 48, (int)payload[4] - 48);
   }
-  else if (temp_topic == "esp32/r2")
+  else if (temp_topic == "esp32/r1")
   {
     hBridge3((int)payload[0]);
   }
-  else if (temp_topic == "esp32/p2")
+  else if (temp_topic == "esp32/p1")
   {
     int newPWM = (int)payload[3] - 48;
     newPWM += 10 * ((int)payload[2] - 48);
@@ -135,19 +133,16 @@ void callback(char *topic, byte *payload, unsigned int length)
 }
 /////////////////////////////////////////////////////////////////////////
 // goForwardUntilBallDetected writes out Forward until it detects the ball
-void goForwardUntilBallDetected()
+void goForwardUntilBallDetected(int dir)
 {
-  int Temp[4] = {pwmA, 0, pwmB, 0};
-  while (true)
-  {
-  // while(analogRead(IRpin) < 3300)
-  // {
-    Serial.println(analogRead(34));
-    writeOut(Temp);
-  }
-  // client.publish("esp32/status", "fb", true);
-  writeOut(Brake);
-  writeOut(Stop);
+  // int Temp[4] = {pwmA, 0, pwmB, 0};
+  // // while (true) 
+  // // {
+  // if(analogRead(IRpin) < 3300) {
+  //   writeOut(Temp);
+  // }
+  // writeOut(Stop);
+  // client.publish("esp32/s", "found ball", true);
 }
 /////////////////////////////////////////////////////////////////////////
 // updatewPWM(motor, newpwm) 
@@ -160,42 +155,42 @@ void updatePWM(int motor, int newPWM)
       case 87 /* W*/:
       {
           pwmA = newPWM;
-          temp += "R2A";
+          temp += "R1A";
           break;
       }
       case 88 /* X*/:
       {
           pwmAT = newPWM;
-          temp += "R2AT";
+          temp += "R1AT";
           break;
       }
       case 89 /* Y*/:
       {
           pwmB = newPWM;
-          temp += "R2B";
+          temp += "R1B";
           break;
       }
       case 90 /* Z*/:
       {
           pwmBT = newPWM;
-          temp += "R2BT";
+          temp += "R1BT";
           break;
       }
       case 85 /* U*/:
       {
           slowpwmA = newPWM;
-          temp += "R2AS";
+          temp += "R1AS";
           break;
       }
       case 86 /* V*/:
       {
           slowpwmB = newPWM;
-          temp += "R2BS";
+          temp += "R1BS";
           break;
       }
       default:
       {
-          temp += "R2FAIL";
+          temp += "R1FAIL";
       }
   }
   temp.toCharArray(tempmsg, temp.length() + 1);
@@ -267,7 +262,7 @@ void hBridgeTimed(int dir, int t_1000ms, int t_100ms, int t_10ms, int t_1ms)
   writeOut(Stop);
 }
 /////////////////////////////////////////////////////////////////////////
-// hBridge3 is simple slow motion 
+// hBridge3 is simple motion 
 void hBridge3(int dir)
 {
   switch (dir)
@@ -297,7 +292,6 @@ void hBridge3(int dir)
       break;
     }
   }
-  //publishAndResetTurns();
 }
 /////////////////////////////////////////////////////////////////////////
 // hBridge2 takes in a direction character and a count and:
@@ -307,6 +301,16 @@ void hBridge2(int dir, int encount)
 {
   switch (dir)
   {
+    case 71 /* G*/:
+    {
+      int Temp[4] = {slowpwmA, 0, slowpwmB, 0};
+      writeOut(Temp);
+      while (std::min(enc0Atotal, enc0Btotal) < encount)
+      {
+        readEncoders();
+      }
+      break;
+    }
     case 70 /* F*/:
     {
       int Temp[4] = {pwmA, 0, pwmB, 0};
@@ -385,18 +389,15 @@ void reconnect()
   while (!client.connected())
   {
     Serial.println("MQTT...");
-    if (client.connect("R2", mqttUser, mqttPassword))
+    if (client.connect("R1", mqttUser, mqttPassword))
     {
       Serial.println("MQTT!");
       client.subscribe("esp32/#", 1);
-      client.publish("esp32/c", "R2");
+      client.publish("esp32/c", "R1");
       digitalWrite(mqttLED, 0x1);
     }
     else
     {
-      Serial.println("No MQTT. RC:" + String(client.state()));
-      Serial.print(client.state());
-      // Retry after 5 seconds
       delay(5000);
     }
   }
@@ -441,13 +442,13 @@ void readEncoders()
 // it then resets the turn variables 
 void publishAndResetTurns()
 {
-  client.publish("esp32/t", "T2", true);
+  client.publish("esp32/t", "T1");
   tempmsg = String(enc0Atotal);
   tempmsg.toCharArray(totalAmsg, tempmsg.length() + 1);
   tempmsg = String(enc0Btotal);
   tempmsg.toCharArray(totalBmsg, tempmsg.length() + 1);
-  client.publish("esp32/t", totalAmsg, true);
-  client.publish("esp32/t", totalBmsg, true);
+  client.publish("esp32/t", totalAmsg);
+  client.publish("esp32/t", totalBmsg);
   enc0Atotal = 0;
   enc0Btotal = 0;
   stateA = false;

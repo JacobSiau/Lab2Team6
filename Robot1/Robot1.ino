@@ -6,6 +6,7 @@ using std::min;
 #define hStop 83     // S
 #define hTurn 84     // T
 #define hForward 70  // F
+#define hForwardSlow 71 // G
 #define hBackward 66 // B
 #define hLeft 76     // L
 #define hRight 82    // R
@@ -21,10 +22,8 @@ using std::min;
 #define MOTORBT 90 // Z
 /////////////////////////////////////////////
 // Encoder Macros
-#define enc0A 21 
-#define enc0B 14
-#define cutoffA 1240 // ~1 V
-#define cutoffB 1240 //
+#define enc0A 14
+#define enc0B 21
 /////////////////////////////////////////////
 // IR Pin 
 #define IRpin 34
@@ -38,8 +37,6 @@ const char *mqttPassword = NULL;
 // WiFi Variables
 const char *swarmID = "TTU Swarm Field";
 const char *swarmpass = "ttuswarmfield";
-// const char *swarmID = "Team6Network";
-// const char *swarmpass = "team6network";
 WiFiClient espClient;
 PubSubClient client(espClient);
 /////////////////////////////////////////////
@@ -58,8 +55,8 @@ const int LeftWide[4] = {0, 0, 252, 0};
 /////////////////////////////////////////////
 // Dynamic Output Patterns/PWM
 volatile int pwmA = 190;
+volatile int pwmB = 218;
 volatile int slowpwmA = 148;
-volatile int pwmB = 208;
 volatile int slowpwmB = 165;
 volatile int pwmAT = 220;
 volatile int pwmBT = 220;
@@ -70,7 +67,6 @@ const byte mqttLED = 13; // red LED
 // Timing Variables
 volatile unsigned long start_time = 0;
 volatile unsigned long cutoff_time = 10000UL;
-volatile int time_ms = 0;
 /////////////////////////////////////////////
 // Encoder Variables
 volatile int enc0Atotal = 0; // tracks A each motion command
@@ -88,7 +84,8 @@ volatile bool stateB = false;
 // callback is called when an MQTT message is recieved by the client 
 void callback(char *topic, byte *payload, unsigned int length)
 {
-  if (String(topic) == "esp32/m1")
+  String temp_topic = String(topic);
+  if (temp_topic == "esp32/m1")
   {
     int encount = (int)payload[4] - 48;
     encount += 10 * ((int)payload[3] - 48);
@@ -96,34 +93,46 @@ void callback(char *topic, byte *payload, unsigned int length)
     encount += 1000 * ((int)payload[1] - 48);
     hBridge2((int)payload[0], encount);
   }
-  else if (String(topic) == "esp32/r1") 
+  else if (temp_topic == "esp32/m1t")
+  {
+    hBridgeTimed((int)payload[0], (int)payload[1] - 48,
+    (int)payload[2] - 48, (int)payload[3] - 48, (int)payload[4] - 48);
+  }
+  else if (temp_topic == "esp32/r1") 
   {
     hBridge3((int)payload[0]);
   }
-  else if (String(topic) == "esp32/p1") 
+  else if (temp_topic == "esp32/p1") 
   {
     int newPWM = (int)payload[3] - 48;
     newPWM += 10 * ((int)payload[2] - 48);
     newPWM += 100 * ((int)payload[1] - 48);
     updatePWM((int)payload[0], newPWM);
   }
-  else if (String(topic) == "esp32/findball") 
+  else if (temp_topic == "esp32/findball") 
   {
-    //goForwardUntilBallDetected((int)payload[0]);
+    // // int Temp[4] = {pwmA, 0, pwmB, 0};
+    // Serial.println("findball");
+    // goForwardUntilBallDetected();
+    // // start_time = millis();
+    // // writeOut(Temp);
+    // // while (millis() - start_time < 700);
+    // // writeOut(Brake);
+    // // writeOut(Stop);
   }
 }
 /////////////////////////////////////////////////////////////////////////
 // goForwardUntilBallDetected writes out Forward until it detects the ball
 void goForwardUntilBallDetected(int dir) 
 {
-  int Temp[4] = {pwmA, 0, pwmB, 0};
-  // while (true) 
-  // {
-  if(analogRead(IRpin) < 3300) {
-    writeOut(Temp);
-  }
-  writeOut(Stop);
-  client.publish("esp32/s", "found ball", true);
+  // int Temp[4] = {pwmA, 0, pwmB, 0};
+  // // while (true) 
+  // // {
+  // if(analogRead(IRpin) < 3300) {
+  //   writeOut(Temp);
+  // }
+  // writeOut(Stop);
+  // client.publish("esp32/s", "found ball", true);
 }
 /////////////////////////////////////////////////////////////////////////
 // updatewPWM(motor, newpwm) 
@@ -187,6 +196,62 @@ void writeOut(const int *src)
   }
 }
 /////////////////////////////////////////////////////////////////////////
+// hBridgeTimed is hbridge for time 
+void hBridgeTimed(int dir, int t_1000ms, int t_100ms, int t_10ms, int t_1ms)
+{
+  int time_ms = (t_1000ms >= 0 && t_1000ms <= 9) ? 1000 * t_1000ms : 0;
+  time_ms = (t_100ms >= 0 && t_100ms <= 9) ? time_ms + 100 * t_100ms : 0;
+  time_ms = (t_10ms >= 0 && t_10ms <= 9) ? time_ms + 10 * t_10ms : 0;
+  time_ms = (t_1ms >= 0 && t_1ms <= 9) ? time_ms + t_1ms : 0;
+  switch (dir) 
+  {
+    case hForward:
+    {
+      int Temp[4] = {pwmA, 0, pwmB, 0};
+      writeOut(Temp);
+      break;
+    }
+    case hBackward:
+    {
+      int Temp[4] = {0, pwmA, 0, pwmB};
+      writeOut(Temp);
+      break;
+    }
+    case hLeft: 
+    {
+      int Temp[4] = {0, pwmA, pwmB, 0};
+      writeOut(Temp);
+      break;
+    }
+    case hRight: 
+    {
+      int Temp[4] = {pwmA, 0, 0, pwmB};
+      writeOut(Temp);
+      break;
+    }
+    case hLeftW:
+    {
+      int Temp[4] = {255, 255, pwmBT, 0};
+      writeOut(Temp);
+      break;
+    }
+    case hRightW:
+    {
+      int Temp[4] = {pwmAT, 0, 255, 255};
+      writeOut(Temp);
+      break;
+    }
+    default:
+    {
+      writeOut(Stop);
+    }
+  }
+  start_time = millis();
+  while (millis() - start_time <= time_ms);
+  writeOut(Brake);
+  writeOut(Stop);
+}
+/////////////////////////////////////////////////////////////////////////
 // hBridge3 is simple motion 
 void hBridge3(int dir) 
 {
@@ -198,9 +263,15 @@ void hBridge3(int dir)
       writeOut(Stop);
       break;
     }
-    case hForward: // F
+    case hForwardSlow:
     {
       int Temp[4] = {slowpwmA, 0, slowpwmB, 0};
+      writeOut(Temp);
+      break;
+    }
+    case hForward: // F
+    {
+      int Temp[4] = {pwmA, 0, pwmB, 0};
       writeOut(Temp);
       break;
     }
@@ -211,7 +282,6 @@ void hBridge3(int dir)
       break;
     }
   }
-  publishAndResetTurns();
 }
 /////////////////////////////////////////////////////////////////////////
 // hBridge2 takes in a direction character and a count and:
@@ -221,6 +291,16 @@ void hBridge2(int dir, int encount)
 {
   switch (dir)
   {
+    case hForwardSlow:
+    {
+      int Temp[4] = {slowpwmA, 0, slowpwmB, 0};
+      writeOut(Temp);
+      while (std::min(enc0Atotal, enc0Btotal) < encount)
+      {
+        readEncoders();
+      }
+      break;
+    }
     case hForward:
     {
       int Temp[4] = {pwmA, 0, pwmB, 0};
@@ -251,7 +331,7 @@ void hBridge2(int dir, int encount)
       }
       break;
     }
-    case hRight:
+    case hRight: 
     {
       int Temp[4] = {pwmAT, 0, 0, pwmBT};
       writeOut(Temp);
@@ -308,9 +388,6 @@ void reconnect()
     }
     else
     {
-      Serial.println("No MQTT. RC:" + String(client.state()));
-      Serial.print(client.state());
-      // Retry after 5 seconds
       delay(5000);
     }
   }

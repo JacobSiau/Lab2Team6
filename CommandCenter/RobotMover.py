@@ -11,10 +11,10 @@ class RobotMover:
     tolerance_y = 10 # tolerance for y in cm
     move_topic = "esp32/m"
     slow_topic = "esp32/r"
-    robot1_left90deg_msg = "K0029"
+    robot1_left90deg_msg = "K0021"
     robot1_right90deg_msg = "Q0028"
-    robot1_timedleft90deg_msg = "K0342"
-    robot1_timedright90deg_msg = "Q0352"
+    robot1_timedleft90deg_msg = "K0300"
+    robot1_timedright90deg_msg = "Q0350"
 
     #################################################################################
     # moveToPoint moves the rover from a point xo,yo to a point xf, yf
@@ -101,7 +101,7 @@ class RobotMover:
         elif len(enc_count) > 4:
             print("Faulty enc_count!")
         print("Final enc_count: " + enc_count)
-        m.publish(m, temp, "F" + enc_count)
+        m.publish(m, temp, "G" + enc_count)
     #################################################################################
 
     #################################################################################

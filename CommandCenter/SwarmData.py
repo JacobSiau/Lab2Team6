@@ -1,5 +1,4 @@
 import requests as req
-from pprint import pprint
 
 
 class SwarmData:
@@ -19,18 +18,21 @@ class SwarmData:
             'triangle': ()
         }
     }
-    oldpositions = None
+    old_positions = None
+    # change_tolerances = (0.5, 0.2)  # tolerance for change in x and y directions
+    robot: ()
+    ball: ()
 
     #################################################################################
     # pixelMap maps a pixel pair (px, py) to a real coordinate pair (rx, ry).
     # The ranges are 0<=rx<=244 and 0<=ry<=122
     @staticmethod
-    def pixelMap(__self__, px, py):
+    def pixelMap(self, px, py):
         # getting max, min and range for x and y positions
-        xmin = min(i['X'] for i in __self__.positions['corners'])
-        xmax = max(i['X'] for i in __self__.positions['corners'])
-        ymin = min(i['Y'] for i in __self__.positions['corners'])
-        ymax = max(i['Y'] for i in __self__.positions['corners'])
+        xmin = min(i['X'] for i in self.positions['corners'])
+        xmax = max(i['X'] for i in self.positions['corners'])
+        ymin = min(i['Y'] for i in self.positions['corners'])
+        ymax = max(i['Y'] for i in self.positions['corners'])
         xrange = xmax - xmin
         yrange = ymax - ymin
         return round(244 * (px - xmin) / xrange, 2), \
@@ -42,69 +44,83 @@ class SwarmData:
     # it calls the get request method from the HTTP library
     # it then fills up the member object variable with the data based on the keys
     @staticmethod
-    def getData(__self__):
+    def getData(self):
         # saving the old data before getting new data
-        __self__.oldpositions = __self__.positions
+        self.old_positions = self.positions
         # getting the new data
-        data = req.get(__self__.url).json()
+        data = req.get(self.url).json()
         # filling up class member variables
-        __self__.positions['corners'] = data['Corners']
-        __self__.positions['ball'] = __self__.pixelMap(
-            __self__,
+        self.positions['corners'] = data['Corners']
+        self.positions['ball'] = self.pixelMap(
+            self,
             data['Ball']['Object Center']['X'],
             data['Ball']['Object Center']['Y'])
-        __self__.positions['red']['circle'] = __self__.pixelMap(
-            __self__,
+        self.positions['red']['circle'] = self.pixelMap(
+            self,
             data['Red Team Data']['Circle']['Object Center']['X'],
             data['Red Team Data']['Circle']['Object Center']['Y'])
-        __self__.positions['red']['square'] = __self__.pixelMap(
-            __self__,
+        self.positions['red']['square'] = self.pixelMap(
+            self,
             data['Red Team Data']['Square']['Object Center']['X'],
             data['Red Team Data']['Square']['Object Center']['Y'])
-        __self__.positions['red']['triangle'] = __self__.pixelMap(
-            __self__,
+        self.positions['red']['triangle'] = self.pixelMap(
+            self,
             data['Red Team Data']['Triangle']['Object Center']['X'],
             data['Red Team Data']['Triangle']['Object Center']['Y'])
-        __self__.positions['blue']['circle'] = __self__.pixelMap(
-            __self__,
+        self.positions['blue']['circle'] = self.pixelMap(
+            self,
             data['Blue Team Data']['Circle']['Object Center']['X'],
             data['Blue Team Data']['Circle']['Object Center']['Y'])
-        __self__.positions['blue']['square'] = __self__.pixelMap(
-            __self__,
+        self.positions['blue']['square'] = self.pixelMap(
+            self,
             data['Blue Team Data']['Square']['Object Center']['X'],
             data['Blue Team Data']['Square']['Object Center']['Y'])
-        __self__.positions['blue']['triangle'] = __self__.pixelMap(
-            __self__,
+        self.positions['blue']['triangle'] = self.pixelMap(
+            self,
             data['Blue Team Data']['Triangle']['Object Center']['X'],
             data['Blue Team Data']['Triangle']['Object Center']['Y'])
     #################################################################################
 
+    # #################################################################################
+    # # checkIfBallMoved compares the current and old values of the ball positions
+    # # and indicates whether it moved beyond a certain tolerance
+    # @staticmethod
+    # def checkIfBallMoved(self):
+    #     if self.old_positions is not None:
+    #         old = self.old_positions['ball']
+    #         new = self.positions['ball']
+    #         for i in range(0, 2):
+    #             if abs(new[i] - old[i]) > self.change_tolerances[i]:
+    #                 # return True
+    #                 print("Ball moved")
+    # #################################################################################
+
     #################################################################################
     # displayBall displays the data for the ball object
     @staticmethod
-    def displayBall(__self__):
+    def displayBall(self):
         print("[Ball Data]\n")
-        print("Ball: " + str(__self__.positions['ball']))
+        print("Ball: " + str(self.positions['ball']))
     #################################################################################
 
     #################################################################################
     # displayRed displays the data for the red team objects
     @staticmethod
-    def displayRed(__self__):
+    def displayRed(self):
         print("[Red Team Data]\n")
-        print("Circle: " + str(__self__.positions['red']['circle']))
-        print("Square: " + str(__self__.positions['red']['square']))
-        print("Triangle: " + str(__self__.positions['red']['triangle']))
+        print("Circle: " + str(self.positions['red']['circle']))
+        print("Square: " + str(self.positions['red']['square']))
+        print("Triangle: " + str(self.positions['red']['triangle']))
     #################################################################################
 
     #################################################################################
     # displayBlue displays the data for the blue team objects
     @staticmethod
-    def displayBlue(__self__):
+    def displayBlue(self):
         print("[Blue Team Data]\n")
-        print("Circle: " + str(__self__.positions['blue']['circle']))
-        print("Square: " + str(__self__.positions['blue']['square']))
-        print("Triangle: " + str(__self__.positions['blue']['triangle']))
+        print("Circle: " + str(self.positions['blue']['circle']))
+        print("Square: " + str(self.positions['blue']['square']))
+        print("Triangle: " + str(self.positions['blue']['triangle']))
     #################################################################################
 
 

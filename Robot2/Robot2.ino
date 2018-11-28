@@ -24,8 +24,6 @@ using std::min;
 // Encoder Macros
 #define enc0A 14 
 #define enc0B 21
-#define cutoffA 1240 // ~1 V
-#define cutoffB 1240 //
 /////////////////////////////////////////////
 // IR Pin 
 #define IRpin 34
@@ -127,17 +125,17 @@ void callback(char *topic, byte *payload, unsigned int length)
 // goForwardUntilBallDetected writes out Forward until it detects the ball
 void goForwardUntilBallDetected() 
 {
-  int Temp[4] = {pwmA, 0, pwmB, 0};
-  while (true) 
-  {
-  // while(analogRead(IRpin) < 3300)
+  // int Temp[4] = {pwmA, 0, pwmB, 0};
+  // while (true) 
   // {
-    Serial.println(analogRead(IRpin));
-    writeOut(Temp);
-  }
-  // client.publish("esp32/status", "fb", true);
-  writeOut(Brake);
-  writeOut(Stop);
+  // // while(analogRead(IRpin) < 3300)
+  // // {
+  //   Serial.println(analogRead(IRpin));
+  //   writeOut(Temp);
+  // }
+  // // client.publish("esp32/status", "fb", true);
+  // writeOut(Brake);
+  // writeOut(Stop);
 }
 /////////////////////////////////////////////////////////////////////////
 // updatewPWM(motor, newpwm) 
@@ -257,7 +255,7 @@ void hBridgeTimed(int dir, int t_1000ms, int t_100ms, int t_10ms, int t_1ms)
   writeOut(Stop);
 }
 /////////////////////////////////////////////////////////////////////////
-// hBridge3 is simple slow motion 
+// hBridge3 is simple motion 
 void hBridge3(int dir) 
 {
   switch (dir)
@@ -287,7 +285,6 @@ void hBridge3(int dir)
       break;
     }
   }
-  //publishAndResetTurns();
 }
 /////////////////////////////////////////////////////////////////////////
 // hBridge2 takes in a direction character and a count and:
@@ -297,6 +294,16 @@ void hBridge2(int dir, int encount)
 {
   switch (dir)
   {
+    case hForwardSlow:
+    {
+      int Temp[4] = {slowpwmA, 0, slowpwmB, 0};
+      writeOut(Temp);
+      while (std::min(enc0Atotal, enc0Btotal) < encount)
+      {
+        readEncoders();
+      }
+      break;
+    }
     case hForward:
     {
       int Temp[4] = {pwmA, 0, pwmB, 0};
@@ -384,9 +391,6 @@ void reconnect()
     }
     else
     {
-      Serial.println("No MQTT. RC:" + String(client.state()));
-      Serial.print(client.state());
-      // Retry after 5 seconds
       delay(5000);
     }
   }

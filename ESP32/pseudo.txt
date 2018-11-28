@@ -145,3 +145,28 @@ Old go forward
         # m.publish(m, "esp32/dir", "F" + timestr)
         # m.publish(m, "esp32/status", "forward")
         # time.sleep(ceil(dtnum))
+
+
+
+
+//////////////////////////////////////
+passing the ball 
+note that another thread is constantly updating position data 
+
+    move R1 forward enough to touch the ball 
+    move R1 out of the way backward 
+    get xdist and ydist needed for R2 
+    if y separation is greater than 15:
+        if R2 y > ball y:
+            turn R2 left
+        else:
+            turn R2 right
+        move R2 forward ydist 
+    if we turned once already:
+        if the last turn was left:
+            turn R2 right
+        else:
+            turn R2 left 
+    move R2 forward xdist 
+    indicate thatR2 should be there
+//////////////////////////////////////
