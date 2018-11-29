@@ -20,7 +20,8 @@ class SwarmData:
     }
     old_positions = None
     # change_tolerances = (0.5, 0.2)  # tolerance for change in x and y directions
-    robot: ()
+    robot2: ()
+    robot1: ()
     ball: ()
 
     #################################################################################

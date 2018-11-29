@@ -11,44 +11,23 @@ class RobotMover:
     tolerance_y = 10 # tolerance for y in cm
     move_topic = "esp32/m"
     slow_topic = "esp32/r"
-    robot1_left90deg_msg = "K0021"
-    robot1_right90deg_msg = "Q0028"
-    robot1_timedleft90deg_msg = "K0300"
-    robot1_timedright90deg_msg = "Q0350"
+    robot1_timedleft90deg_msg = "K0600"
+    robot1_timedright90deg_msg = "Q0560"
+    robot2_timedleft90deg_msg = "K0350"
+    robot2_timedright90deg_msg = "Q0405"
 
-    #################################################################################
-    # moveToPoint moves the rover from a point xo,yo to a point xf, yf
-    # it does this by moving the rover straight, turning the rover left or right,
-    # and then moving the rover straight again
-    @staticmethod
-    def moveToPoint(__self__, xo, yo, xf, yf, m: MQTTClient):
-        # how far it needs to go
-        dx = round(xf - xo, 2) - __self__.tolerance_x
-        print("Robot needs to change x by: " + str(dx))
-        dy = round(yf - yo, 2) - __self__.tolerance_y
-        print("Robot needs to change y by: " + str(dy))
-
-
-        # if dy < 0:
-        #     __self__.turnRobot(__self__, robot_num=1, direction='R', m=m)
-        #     time.sleep(3)
-        #     __self__.goForward(__self__, robot_num=1, dx=dy, m=m)
-        #     time.sleep(3)
-        #     __self__.turnRobot(__self__, robot_num=1, direction='L', m=m)
-        #     time.sleep(3)
-        #     __self__.goForward(__self__, robot_num=1, dx=dx, m=m)
-        #     time.sleep(3)
-        # else:
-        #     __self__.turnRobot(__self__, robot_num=1, direction='L', m=m)
-        #     time.sleep(3)
-        #     __self__.goForward(__self__, robot_num=1, dx=dy, m=m)
-        #     time.sleep(3)
-        #     __self__.turnRobot(__self__, robot_num=1, direction='R', m=m)
-        #     time.sleep(3)
-        #     __self__.goForward(__self__, robot_num=1, dx=dx, m=m)
-        #     time.sleep(3)
-
-    #################################################################################
+    # #################################################################################
+    # # moveToPoint moves the rover from a point xo,yo to a point xf, yf
+    # # it does this by moving the rover straight, turning the rover left or right,
+    # # and then moving the rover straight again
+    # @staticmethod
+    # def moveToPoint(__self__, xo, yo, xf, yf, m: MQTTClient):
+    #     # how far it needs to go
+    #     dx = round(xf - xo, 2) - __self__.tolerance_x
+    #     print("Robot needs to change x by: " + str(dx))
+    #     dy = round(yf - yo, 2) - __self__.tolerance_y
+    #     print("Robot needs to change y by: " + str(dy))
+    # #################################################################################
 
     @staticmethod
     def goForwardNormally(__self__, robot_num, m: MQTTClient):
@@ -109,22 +88,24 @@ class RobotMover:
     @staticmethod
     def turnRobot(__self__, robot_num, direction, m: MQTTClient):
         print("turnRobot called")
-        if robot_num != 1 and robot_num != 2:
-            print("Invalid robot_num passed: " + str(robot_num))
-            return
-        temp = ""
-        if robot_num is 1:
+        if robot_num == 1:
             temp = "esp32/m1t"
-        else:
+            if direction == 'L':
+                m.publish(m, temp, __self__.robot1_timedleft90deg_msg)
+            elif direction == 'R':
+                m.publish(m, temp, __self__.robot1_timedright90deg_msg)
+            else:
+                print("Invalid direction passed: " + str(direction))
+        elif robot_num == 2:
             temp = "esp32/m2t"
-        print("robot_num: " + str(robot_num) + ", topic: " + temp)
-        print("direction: " + str(direction))
-        if direction == 'L':
-            m.publish(m, temp, __self__.robot1_timedleft90deg_msg)
-        elif direction == 'R':
-            m.publish(m, temp, __self__.robot1_timedright90deg_msg)
+            if direction == 'L':
+                m.publish(m, temp, __self__.robot1_timedleft90deg_msg)
+            elif direction == 'R':
+                m.publish(m, temp, __self__.robot1_timedright90deg_msg)
+            else:
+                print("Invalid direction passed: " + str(direction))
         else:
-            print("Invalid direction passed: " + str(direction))
+            print("invalid robot_num passed: " + str(robot_num))
         time.sleep(4)
     #################################################################################
 

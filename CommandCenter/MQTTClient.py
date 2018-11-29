@@ -9,12 +9,15 @@ class MQTTClient:
     ip = "192.168.137.195"
     port = 1883
     refresh = 60
+    last_status = None
 
     #################################################################################
     # onMessage implements a method to be called by the MQTT client library
     # it is linked to the MQTT client later on and is called upon receipt of a msg
     @staticmethod
-    def onMessage(client, userdata, msg):
+    def onMessage(self, client, userdata, msg):
+        if msg.topic == "esp32/s":
+            self.last_status = msg.payload
         print(msg.topic + "  " + str(msg.payload))
     #################################################################################
 

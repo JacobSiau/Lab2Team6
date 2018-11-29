@@ -28,7 +28,7 @@ using std::min;
 #define enc0B 21
 /////////////////////////////////////////////
 // IR Pin 
-#define IRpin 34
+#define IRpin 26
 /////////////////////////////////////////////
 // MQTT Variables
 IPAddress mqttServer(192, 168, 137, 195);
@@ -64,8 +64,8 @@ const int RightWide[4] = {250, 0, 0, 0};
 const int LeftWide[4] = {0, 0, 252, 0};
 /////////////////////////////////////////////
 // Dynamic Output Patterns/PWM
-volatile int pwmA = 190;
-volatile int pwmB = 218;
+volatile int pwmA = 250;
+volatile int pwmB = 254;
 volatile int slowpwmA = 148;
 volatile int slowpwmB = 165;
 volatile int pwmAT = 220;
@@ -76,7 +76,9 @@ const byte mqttLED = 13; // red LED
 /////////////////////////////////////////////
 // Timing Variables
 volatile unsigned long start_time = 0;
-volatile unsigned long cutoff_time = 10000UL;
+volatile unsigned long ir_start_time = 0;
+volatile unsigned long ir_sample_total_time = 0;
+volatile unsigned long ir_sample_cutoff_time = 10000UL; // 10s
 /////////////////////////////////////////////
 // Encoder Variables
 volatile int enc0Atotal = 0; // tracks A each motion command
@@ -119,30 +121,53 @@ void callback(char *topic, byte *payload, unsigned int length)
     newPWM += 100 * ((int)payload[1] - 48);
     updatePWM((int)payload[0], newPWM);
   }
-  else if (temp_topic == "esp32/findball")
+  else if (temp_topic == "esp32/fb1")
   {
-    // // int Temp[4] = {pwmA, 0, pwmB, 0};
-    // Serial.println("findball");
-    // goForwardUntilBallDetected();
-    // // start_time = millis();
-    // // writeOut(Temp);
-    // // while (millis() - start_time < 700);
-    // // writeOut(Brake);
-    // // writeOut(Stop);
+    goForwardUntilBallDetected();
   }
 }
 /////////////////////////////////////////////////////////////////////////
-// goForwardUntilBallDetected writes out Forward until it detects the ball
-void goForwardUntilBallDetected(int dir)
+// goForwardUntilBallDetected 
+void goForwardUntilBallDetected()
 {
-  // int Temp[4] = {pwmA, 0, pwmB, 0};
-  // // while (true) 
-  // // {
-  // if(analogRead(IRpin) < 3300) {
-  //   writeOut(Temp);
+  int Temp[4] = {slowpwmA, 0, slowpwmB, 0};
+  ir_sample_total_time = millis();
+  int count = 0;
+  writeOut(Temp);
+  // while the total time is less than 3s 
+  while (millis() - ir_sample_total_time < 3000)
+  {
+    // if we get a reading on the IR while going forward,
+    // sample for the next second to see if it really is something 
+    if (digitalRead(26))
+    {
+      ir_start_time = millis();
+      count = 0;
+      // sample 100 times during 1 second 
+      while (millis() - ir_start_time < 1000)
+      {
+        if (digitalRead(26)) count++;
+        start_time = millis();
+        while (millis() - start_time < 10); // delay 10ms 
+      }
+      // Serial.println(count);
+      // if count is greater than 30, something is really there 
+      if (count > 30)
+      {
+        writeOut(Brake);
+        writeOut(Stop);
+        client.publish("esp32/s", "1bT", true);
+        return;
+      }
+    }
+  }
+  writeOut(Brake);
+  writeOut(Stop);
+  client.publish("esp32/s", "1bF", true);
+  // {
+  //   Serial.println(digitalRead(IRpin));
+  //   delay(100);
   // }
-  // writeOut(Stop);
-  // client.publish("esp32/s", "found ball", true);
 }
 /////////////////////////////////////////////////////////////////////////
 // updatewPWM(motor, newpwm) 
@@ -468,7 +493,7 @@ void setup()
   }
   pinMode(14, 0x01);
   pinMode(21, 0x01);
-  pinMode(34, 0x01);
+  pinMode(26, 0x01);
   pinMode(mqttLED, 0x02);
   digitalWrite(mqttLED, 0x0);
   // begin connecting to WiFi

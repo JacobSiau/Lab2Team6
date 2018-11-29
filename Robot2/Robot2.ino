@@ -26,7 +26,7 @@ using std::min;
 #define enc0B 21
 /////////////////////////////////////////////
 // IR Pin 
-#define IRpin 34
+#define IRpin 26
 /////////////////////////////////////////////
 // MQTT Variables
 IPAddress mqttServer(192, 168, 137, 195);
@@ -66,7 +66,9 @@ const byte mqttLED = 13; // red LED
 /////////////////////////////////////////////
 // Timing Variables
 volatile unsigned long start_time = 0;
-volatile unsigned long cutoff_time = 10000UL;
+volatile unsigned long ir_start_time = 0;
+volatile unsigned long ir_sample_total_time = 0;
+volatile unsigned long ir_sample_cutoff_time = 10000UL; // 10s
 /////////////////////////////////////////////
 // Encoder Variables
 volatile int enc0Atotal = 0; // tracks A each motion command
@@ -85,7 +87,7 @@ volatile bool stateB = false;
 void callback(char *topic, byte *payload, unsigned int length)
 {
   String temp_topic = String(topic);
-  if (temp_topic == "esp32/m2")
+  if (temp_topic == "esp32/m2") // encoder count based DXXXX
   {
     int encount = (int)payload[4] - 48;
     encount += 10 * ((int)payload[3] - 48);
@@ -93,49 +95,69 @@ void callback(char *topic, byte *payload, unsigned int length)
     encount += 1000 * ((int)payload[1] - 48);
     hBridge2((int)payload[0], encount);
   }
-  else if (temp_topic == "esp32/m2t")
-  {
+  else if (temp_topic == "esp32/m2t") // timed DXXXX
+  { 
     hBridgeTimed((int)payload[0], (int)payload[1] - 48,
     (int)payload[2] - 48, (int)payload[3] - 48, (int)payload[4] - 48);
   }
-  else if (temp_topic == "esp32/r2") 
+  else if (temp_topic == "esp32/r2") // normal motion D 
   {
     hBridge3((int)payload[0]);
   }
-  else if (temp_topic == "esp32/p2") 
+  else if (temp_topic == "esp32/p2") // to change pwm CXXX
   {
     int newPWM = (int)payload[3] - 48;
     newPWM += 10 * ((int)payload[2] - 48);
     newPWM += 100 * ((int)payload[1] - 48);
     updatePWM((int)payload[0], newPWM);
   }
-  else if (temp_topic == "esp32/findball") 
+  else if (temp_topic == "esp32/fb2")  
   {
-    // // int Temp[4] = {pwmA, 0, pwmB, 0};
-    // Serial.println("findball");
-    // goForwardUntilBallDetected();
-    // // start_time = millis();
-    // // writeOut(Temp);
-    // // while (millis() - start_time < 700);
-    // // writeOut(Brake);
-    // // writeOut(Stop);
+    goForwardUntilBallDetected();
   }
 }
 /////////////////////////////////////////////////////////////////////////
-// goForwardUntilBallDetected writes out Forward until it detects the ball
+// goForwardUntilBallDetected 
 void goForwardUntilBallDetected() 
 {
-  // int Temp[4] = {pwmA, 0, pwmB, 0};
-  // while (true) 
+  int Temp[4] = {slowpwmA, 0, slowpwmB, 0};
+  ir_sample_total_time = millis();
+  int count = 0;
+  writeOut(Temp);
+  // while the total time is less than 3s 
+  while (millis() - ir_sample_total_time < 3000) 
+  {
+    // if we get a reading on the IR while going forward,
+    // sample for the next second to see if it really is something 
+    if (digitalRead(IRpin)) 
+    {
+      ir_start_time = millis();
+      count = 0;
+      // sample 100 times during 1 second 
+      while (millis() - ir_start_time < 1000)
+      {
+        if (digitalRead(IRpin)) count++;
+        start_time = millis();
+        while (millis() - start_time < 10); // delay 10ms 
+      }
+      // Serial.println(count);
+      // if count is greater than 30, something is really there 
+      if (count > 30) 
+      {
+        writeOut(Brake);
+        writeOut(Stop);
+        client.publish("esp32/s", "2bT", true);
+        return;
+      }
+    }
+  }
+  writeOut(Brake);
+  writeOut(Stop);
+  client.publish("esp32/s", "2bF", true);
   // {
-  // // while(analogRead(IRpin) < 3300)
-  // // {
-  //   Serial.println(analogRead(IRpin));
-  //   writeOut(Temp);
+  //   Serial.println(digitalRead(IRpin));
+  //   delay(100);
   // }
-  // // client.publish("esp32/status", "fb", true);
-  // writeOut(Brake);
-  // writeOut(Stop);
 }
 /////////////////////////////////////////////////////////////////////////
 // updatewPWM(motor, newpwm) 
