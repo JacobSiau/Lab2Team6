@@ -2,19 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59617a02-4a6a-4856-a3c8-7119c358e716" name="Default Changelist" comment="Added WiFiTest to ESP32 Folder">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/arduino.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/arduino.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/Robot1.ino.bin" beforeDir="false" afterPath="$PROJECT_DIR$/Build/Robot1.ino.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/Robot1.ino.elf" beforeDir="false" afterPath="$PROJECT_DIR$/Build/Robot1.ino.elf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/arduino.ar" beforeDir="false" afterPath="$PROJECT_DIR$/Build/arduino.ar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/preproc/ctags_target_for_gcc_minus_e.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Build/preproc/ctags_target_for_gcc_minus_e.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/sketch/Robot1.ino.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Robot1.ino.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Build/sketch/Robot1.ino.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Build/sketch/Robot1.ino.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CommandCenter/CommandCenterMain.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/CommandCenterMain.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CommandCenter/RobotMover.py" beforeDir="false" afterPath="$PROJECT_DIR$/CommandCenter/RobotMover.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Robot1/Robot1.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Robot1/Robot1.ino" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Robot2/Robot2.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Robot2/Robot2.ino" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RobotExperiment/RobotExp.ino" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ESP32/pseudo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ESP32/pseudo.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -71,7 +61,7 @@
         <counts>
           <entry key="dummy" value="89" />
           <entry key="md" value="162" />
-          <entry key="py" value="33551" />
+          <entry key="py" value="33740" />
           <entry key="txt" value="89" />
           <entry key="yaml" value="173" />
         </counts>
@@ -80,7 +70,7 @@
         <counts>
           <entry key="Markdown" value="162" />
           <entry key="PLAIN_TEXT" value="178" />
-          <entry key="Python" value="33551" />
+          <entry key="Python" value="33740" />
           <entry key="YAML" value="173" />
         </counts>
       </usages-collector>
@@ -91,13 +81,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="14" column="44" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
+            <state relative-caret-position="274">
+              <caret line="132" column="17" lean-forward="true" selection-start-line="132" selection-start-column="17" selection-end-line="132" selection-end-column="17" />
               <folding>
                 <element signature="e#0#52#0" expanded="true" />
-                <marker date="1543653118700" expanded="true" signature="260:263" ph="..." />
-                <marker date="1543653118700" expanded="true" signature="707:709" ph="..." />
-                <marker date="1543653118700" expanded="true" signature="708:709" ph="..." />
+                <marker date="1543666806389" expanded="true" signature="260:263" ph="..." />
+                <marker date="1543666806389" expanded="true" signature="704:706" ph="..." />
+                <marker date="1543666806389" expanded="true" signature="705:706" ph="..." />
               </folding>
             </state>
           </provider>
@@ -106,11 +96,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CommandCenter/RobotMover.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1080">
+            <state relative-caret-position="300">
               <caret line="15" column="39" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
               <folding>
                 <element signature="e#0#47#0" expanded="true" />
-                <marker date="1543648252206" expanded="true" signature="424:430" ph="..." />
+                <marker date="1543666663237" expanded="true" signature="420:426" ph="..." />
               </folding>
             </state>
           </provider>
@@ -517,17 +507,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CommandCenter/RobotMover.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1080">
-          <caret line="15" column="39" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#47#0" expanded="true" />
-            <marker date="1543648252206" expanded="true" signature="424:430" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CommandCenter/SwarmData.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-400">
@@ -553,15 +532,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/CommandCenter/RobotMover.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="15" column="39" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#47#0" expanded="true" />
+            <marker date="1543666663237" expanded="true" signature="420:426" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CommandCenter/CommandCenterMain.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="14" column="44" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
+        <state relative-caret-position="274">
+          <caret line="132" column="17" lean-forward="true" selection-start-line="132" selection-start-column="17" selection-end-line="132" selection-end-column="17" />
           <folding>
             <element signature="e#0#52#0" expanded="true" />
-            <marker date="1543653118700" expanded="true" signature="260:263" ph="..." />
-            <marker date="1543653118700" expanded="true" signature="707:709" ph="..." />
-            <marker date="1543653118700" expanded="true" signature="708:709" ph="..." />
+            <marker date="1543666806389" expanded="true" signature="260:263" ph="..." />
+            <marker date="1543666806389" expanded="true" signature="704:706" ph="..." />
+            <marker date="1543666806389" expanded="true" signature="705:706" ph="..." />
           </folding>
         </state>
       </provider>

@@ -11,8 +11,8 @@ from math import sqrt
 def getDataJob():
     # print("Getting new CV data...")
     S.getData(S)
-    S.robot2 = S.positions['red']['triangle']
-    S.robot1 = S.positions['blue']['triangle']
+    S.robot2 = S.positions['blue']['circle']
+    S.robot1 = S.positions['blue']['square']
     S.ball = S.positions['ball']
     # print("R: " + str(S.robot[0]) + ", " + str(S.robot[1]))
     # print("S: " + str(S.ball[0]) + ", " + str(S.ball[1]))
@@ -26,8 +26,8 @@ if __name__ == '__main__':
 
     last_turn = None
     next_turn = None
-    x_tolerance = 10
-    y_tolerance = 5
+    x_tolerance = 20
+    y_tolerance = 12
 
     done = False
     while done is False:
@@ -125,11 +125,13 @@ if __name__ == '__main__':
             sleep(5)
 
             # R1 backs up
-            R.goBackward(R, robot_num=1, dx=50, m=M)
+            R.goBackward(R, robot_num=1, dx=r1_x_dist - x_tolerance, m=M)
             sleep(10)
 
-            # R1 turns left
-            R.turnRobot(R, robot_num=1, direction='R', m=M)
+            if round(S.ball[1]) < 61:
+                R.turnRobot(R, robot_num=1, direction='R', m=M)
+            else:
+                R.turnRobot(R, robot_num=1, direction='L', m=M)
             sleep(5)
 
             # R1 goes to the edge of the field
@@ -143,7 +145,7 @@ if __name__ == '__main__':
             print("r2 ydist: " + str(r2_y_dist))
 
             # R2 goes forward y dist
-            R.goForward(R, robot_num=2, dx=r2_y_dist, m=M)
+            R.goForward(R, robot_num=2, dx=r2_y_dist - y_tolerance, m=M)
             sleep(5)
 
             # R2 turns toward ball

@@ -170,3 +170,29 @@ note that another thread is constantly updating position data
     move R2 forward xdist 
     indicate thatR2 should be there
 //////////////////////////////////////
+
+
+
+// Competition
+
+M.publish(M, topic="esp32/p1", msg="W255")
+M.publish(M, topic="esp32/p2", msg="W255")
+M.publish(M, topic="esp32/p1", msg="Y255")
+M.publish(M, topic="esp32/p2", msg="Y255")
+M.publish(M, topic="esp32/p3", msg="Y255")
+M.publish(M, topic="esp32/p3", msg="Y255")
+sleep(20)
+R.goForward(R, robot_num=1, dx=200, m=M)
+R.goForward(R, robot_num=2, dx=200, m=M)
+sleep(20) 
+
+M.publish(M, topic="esp32/m1t", msg="L9999")
+M.publish(M, topic="esp32/m2t", msg="L9999")
+sleep(20)
+
+R.goForward(R, robot_num=1, dx=50, m=M)
+R.goForward(R, robot_num=2, dx=50, m=M)
+sleep(20)
+
+R.goForward(R, robot_num=3, dx=200, m=M)
+sleep(20)

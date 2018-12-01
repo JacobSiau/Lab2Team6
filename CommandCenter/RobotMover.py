@@ -6,14 +6,14 @@ from math import ceil, pi
 class RobotMover:
 
     wheel_radius = 3.25 # cm
-    robot1_avg_speed = 68.15 # cm/s
-    robot2_avg_speed = 49.31  # cm/s
+    robot1_avg_speed = 46 # cm/s
+    robot2_avg_speed = 68.5  # cm/s
     move_topic = "esp32/m"
     slow_topic = "esp32/r"
-    robot1_timedleft90deg_msg = "K0295"
+    robot1_timedleft90deg_msg = "K0290"
     robot1_timedright90deg_msg = "Q0290"
-    robot2_timedleft90deg_msg = "K0375"
-    robot2_timedright90deg_msg = "Q0410"
+    robot2_timedleft90deg_msg = "K0285"
+    robot2_timedright90deg_msg = "Q0325"
 
     #################################################################################
     # goForward moves the rover forward a distance dx
