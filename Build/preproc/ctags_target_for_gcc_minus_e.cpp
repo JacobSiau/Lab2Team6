@@ -64,10 +64,10 @@ const int RightWide[4] = {250, 0, 0, 0};
 const int LeftWide[4] = {0, 0, 252, 0};
 /////////////////////////////////////////////
 // Dynamic Output Patterns/PWM
-volatile int pwmA = 250;
+volatile int pwmA = 248;
 volatile int pwmB = 254;
-volatile int slowpwmA = 148;
-volatile int slowpwmB = 165;
+volatile int slowpwmA = 160;
+volatile int slowpwmB = 190;
 volatile int pwmAT = 220;
 volatile int pwmBT = 220;
 const int freq = 1000; // PWM output frequency [Hz]
@@ -515,5 +515,6 @@ void loop()
 {
   if (!client.connected()) reconnect();
   client.loop();
+  // delay(5000);
 }
 /////////////////////////////////////////////////////////////////////////

@@ -54,8 +54,8 @@ const int RightWide[4] = {250, 0, 0, 0};
 const int LeftWide[4] = {0, 0, 252, 0};
 /////////////////////////////////////////////
 // Dynamic Output Patterns/PWM
-volatile int pwmA = 253;
-volatile int pwmB = 254;
+volatile int pwmA = 255;
+volatile int pwmB = 255;
 volatile int slowpwmA = 132;
 volatile int slowpwmB = 148;
 volatile int pwmAT = 220;
@@ -87,7 +87,7 @@ volatile bool stateB = false;
 void callback(char *topic, byte *payload, unsigned int length)
 {
   String temp_topic = String(topic);
-  if (temp_topic == "esp32/m2") // encoder count based DXXXX
+  if (temp_topic == "esp32/m3") // encoder count based DXXXX
   {
     int encount = (int)payload[4] - 48;
     encount += 10 * ((int)payload[3] - 48);
@@ -95,69 +95,22 @@ void callback(char *topic, byte *payload, unsigned int length)
     encount += 1000 * ((int)payload[1] - 48);
     hBridge2((int)payload[0], encount);
   }
-  else if (temp_topic == "esp32/m2t") // timed DXXXX
+  else if (temp_topic == "esp32/m3t") // timed DXXXX
   { 
     hBridgeTimed((int)payload[0], (int)payload[1] - 48,
     (int)payload[2] - 48, (int)payload[3] - 48, (int)payload[4] - 48);
   }
-  else if (temp_topic == "esp32/r2") // normal motion D 
+  else if (temp_topic == "esp32/r3") // normal motion D 
   {
     hBridge3((int)payload[0]);
   }
-  else if (temp_topic == "esp32/p2") // to change pwm CXXX
+  else if (temp_topic == "esp32/p3") // to change pwm CXXX
   {
     int newPWM = (int)payload[3] - 48;
     newPWM += 10 * ((int)payload[2] - 48);
     newPWM += 100 * ((int)payload[1] - 48);
     updatePWM((int)payload[0], newPWM);
   }
-  else if (temp_topic == "esp32/fb2")  
-  {
-    goForwardUntilBallDetected();
-  }
-}
-/////////////////////////////////////////////////////////////////////////
-// goForwardUntilBallDetected 
-void goForwardUntilBallDetected() 
-{
-  int Temp[4] = {slowpwmA, 0, slowpwmB, 0};
-  ir_sample_total_time = millis();
-  int count = 0;
-  writeOut(Temp);
-  // while the total time is less than 3s 
-  while (millis() - ir_sample_total_time < 3000) 
-  {
-    // if we get a reading on the IR while going forward,
-    // sample for the next second to see if it really is something 
-    if (digitalRead(IRpin)) 
-    {
-      ir_start_time = millis();
-      count = 0;
-      // sample 100 times during 1 second 
-      while (millis() - ir_start_time < 1000)
-      {
-        if (digitalRead(IRpin)) count++;
-        start_time = millis();
-        while (millis() - start_time < 10); // delay 10ms 
-      }
-      // Serial.println(count);
-      // if count is greater than 30, something is really there 
-      if (count > 30) 
-      {
-        writeOut(Brake);
-        writeOut(Stop);
-        client.publish("esp32/s", "2bT", true);
-        return;
-      }
-    }
-  }
-  writeOut(Brake);
-  writeOut(Stop);
-  client.publish("esp32/s", "2bF", true);
-  // {
-  //   Serial.println(digitalRead(IRpin));
-  //   delay(100);
-  // }
 }
 /////////////////////////////////////////////////////////////////////////
 // updatewPWM(motor, newpwm) 
@@ -170,42 +123,42 @@ void updatePWM(int motor, int newPWM)
       case MOTORA:
       {
           pwmA = newPWM;
-          temp += "R2A";
+          temp += "R3A";
           break;
       }
       case MOTORAT:
       {
           pwmAT = newPWM;
-          temp += "R2AT";
+          temp += "R3AT";
           break;
       }
       case MOTORB: 
       {
           pwmB = newPWM;
-          temp += "R2B";
+          temp += "R3B";
           break;
       }
       case MOTORBT:
       {
           pwmBT = newPWM;
-          temp += "R2BT";
+          temp += "R3BT";
           break;
       }
       case SMOTORA:
       {
           slowpwmA = newPWM;
-          temp += "R2AS";
+          temp += "R3AS";
           break;
       }
       case SMOTORB:
       {
           slowpwmB = newPWM;
-          temp += "R2BS";
+          temp += "R3BS";
           break;
       }
       default:
       {
-          temp += "R2FAIL";
+          temp += "R3FAIL";
       }
   }
   temp.toCharArray(tempmsg, temp.length() + 1);
@@ -404,11 +357,11 @@ void reconnect()
   while (!client.connected())
   {
     Serial.println("MQTT...");
-    if (client.connect("R2", mqttUser, mqttPassword))
+    if (client.connect("R3", mqttUser, mqttPassword))
     {
       Serial.println("MQTT!");
       client.subscribe("esp32/#", 1);
-      client.publish("esp32/c", "R2");
+      client.publish("esp32/c", "R3");
       digitalWrite(mqttLED, HIGH);
     }
     else
@@ -457,7 +410,7 @@ void readEncoders()
 // it then resets the turn variables 
 void publishAndResetTurns()
 {
-  client.publish("esp32/t", "T2", true);
+  client.publish("esp32/t", "T3", true);
   tempmsg = String(enc0Atotal);
   tempmsg.toCharArray(totalAmsg, tempmsg.length() + 1);
   tempmsg = String(enc0Btotal);
@@ -505,6 +458,5 @@ void loop()
 {
   if (!client.connected()) reconnect();
   client.loop();
-  //delay(5000);
 }
 /////////////////////////////////////////////////////////////////////////

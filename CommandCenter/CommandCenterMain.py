@@ -11,7 +11,7 @@ from math import sqrt
 def getDataJob():
     # print("Getting new CV data...")
     S.getData(S)
-    S.robot2 = S.positions['blue']['circle']
+    S.robot2 = S.positions['red']['triangle']
     S.robot1 = S.positions['blue']['triangle']
     S.ball = S.positions['ball']
     # print("R: " + str(S.robot[0]) + ", " + str(S.robot[1]))
@@ -25,8 +25,9 @@ if __name__ == '__main__':
     getDataTimer = T(0.5, getDataJob) # schedules getDataJob
 
     last_turn = None
-    x_tolerance = 15
-    y_tolerance = 15
+    next_turn = None
+    x_tolerance = 10
+    y_tolerance = 5
 
     done = False
     while done is False:
@@ -37,99 +38,118 @@ if __name__ == '__main__':
         i = input("Type 0 to go, anything else to refresh")
         if i is '0':
 
-            r1_x_dist = round(abs(S.ball[0] - S.robot1[0]), 2)
-            r1_y_dist = round(abs(S.ball[1] - S.robot1[1]), 2)
-            print("r1 xdist: " + str(r1_x_dist))
-            print("r1 ydist: " + str(r1_y_dist))
-
-            # first turn r1
-
-            # if we need to turn left/right initially
-            if abs(S.ball[1] - S.robot1[1]) > y_tolerance:
-                if S.robot1[1] > S.ball[1]:
-                    last_turn = 'L'
-                    R.turnRobot(R, robot_num=1, direction='L', m=M)
-                # else we turn right
-                else:
-                    last_turn = 'R'
-                    R.turnRobot(R, robot_num=1, direction='R', m=M)
-                sleep(5)
-                # moving the y dist
-                R.goForward(R, robot_num=1, dx=r1_y_dist - y_tolerance, m=M)
-                sleep(5)
-
-            # if we turned L, now R
-            if last_turn is not None:
-                if last_turn is 'L':
-                    R.turnRobot(R, robot_num=1, direction='R', m=M)
-                # else we turn L now
-                else:
-                    R.turnRobot(R, robot_num=1, direction='L', m=M)
-            sleep(5)
-
-            R.goForward(R, robot_num=1, dx=r1_x_dist - x_tolerance, m=M)
-            sleep(5)
-
-            # # r1 go to ball then turn out of way
+            # r1_x_dist = round(abs(S.robot1[0] - S.ball[0]), 2)
+            # r1_y_dist = round(abs(S.robot1[1] - S.ball[1]), 2)
+            # r1_goal_dist = round(abs(S.robot1[0])) + x_tolerance
             #
-            # R.goForward(R, robot_num=1, dx=40, m=M)
-            # sleep(5)
-            # R.turnRobot(R, robot_num=1, direction='R', m=M)
-            # sleep(2)
-            # R.turnRobot(R, robot_num=1, direction='R', m=M)
-            # sleep(2)
-            # R.turnRobot(R, robot_num=1, direction='R', m=M)
-            # sleep(2)
-            # R.goForward(R, robot_num=1, dx=40, m=M)
-            # # sleep(2)
-            # # M.publish(M, topic="esp32/r1", msg="B")
-            # sleep(3)
-            # R.stopRobot(R, robot_num=1, m=M)
+            # print("r1 xdist: " + str(r1_x_dist))
+            # print("r1 ydist: " + str(r1_y_dist))
             #
+            #
+            # ############################################################
+            # # R1 initially in +y direction, R1 initially in -y direction
+            # # R1 goes to the ball and scores, then R2 touches ball
+            #
+            # # R1 go forward y dist
+            # R.goForward(R, robot_num=1, dx=r1_y_dist, m=M)
             # sleep(5)
-
-            # R2 MOTION
-
-            # r2_x_dist = round(abs(S.ball[0] - S.robot2[0]), 2)
-            # r2_y_dist = round(abs(S.ball[1] - S.robot2[1]), 2)
+            #
+            # # R1 turn towards ball
+            # R.turnRobot(R, robot_num=1, direction='L', m=M)
+            # sleep(5)
+            #
+            # # R1 goes all the way to the goal?
+            # R.goForward(R, robot_num=1, dx=r1_goal_dist, m=M)
+            # sleep(10)
+            #
+            # # R1 backs up a little
+            # R.goBackward(R, robot_num=1, dx=50, m=M)
+            # sleep(5)
+            #
+            # # R1 turns left
+            # R.turnRobot(R, robot_num=1, direction='L', m=M)
+            # sleep(5)
+            #
+            # # R1 goes to the edge of the field
+            # R.goForward(R, robot_num=1, dx=100, m=M)
+            # sleep(5)
+            #
+            # r2_x_dist = round(abs(S.robot2[0] - S.ball[0]), 2)
+            # r2_y_dist = round(abs(S.robot2[1] - S.ball[1]), 2)
+            # r2_goal_dist = round(abs(S.robot2[0]))
             # print("r2 xdist: " + str(r2_x_dist))
             # print("r2 ydist: " + str(r2_y_dist))
             #
-            # # initially facing in x direction
-            #
-            # # first turn
-            #
-            # # if we need to turn left/right initially
-            # if abs(S.ball[1] - S.robot2[1]) > y_tolerance:
-            #     if S.robot2[1] > S.ball[1]:
-            #         last_turn = 'L'
-            #         R.turnRobot(R, robot_num=2, direction='L', m=M)
-            #     # else we turn right
-            #     else:
-            #         last_turn = 'R'
-            #         R.turnRobot(R, robot_num=2, direction='R', m=M)
-            #     sleep(5)
-            #     # moving the y dist
-            #     R.goForward(R, robot_num=2, dx=r2_y_dist - y_tolerance, m=M)
-            #     sleep(5)
-            #
-            # # second turn
-            #
-            # # if we turned L, now R
-            # if last_turn is not None:
-            #     if last_turn is 'L':
-            #         R.turnRobot(R, robot_num=2, direction='R', m=M)
-            #     # else we turn L now
-            #     else:
-            #         R.turnRobot(R, robot_num=2, direction='L', m=M)
+            # # R2 goes forward y dist
+            # R.goForward(R, robot_num=2, dx=r2_y_dist, m=M)
             # sleep(5)
             #
-            # M.publish(M, topic="esp32/fb2", msg="go")
+            # # R2 turns toward ball
+            # R.turnRobot(R, robot_num=2, direction='R', m=M)
             # sleep(5)
-            # foundBall = False
-            # if M.last_status is not None:
-            #     foundBall = (M.last_status == "2bT")
             #
-            # print("foundBall: " + str(foundBall))
-            # done = True
+            # # R2 takes it all the way
+            # R.goForward(R, robot_num=2, dx=r2_goal_dist, m=M)
+            # sleep(10)
 
+            ##############################################################
+            ##############################################################
+            ##############################################################
+            ##############################################################
+            ##############################################################
+            ##############################################################
+            ##############################################################
+
+
+            r1_x_dist = round(abs(S.robot1[0] - S.ball[0]), 2)
+            r1_y_dist = round(abs(S.robot1[1] - S.ball[1]), 2)
+            #r1_goal_dist = round(abs(S.robot1[0])) + x_tolerance
+
+            print("r1 xdist: " + str(r1_x_dist))
+            print("r1 ydist: " + str(r1_y_dist))
+
+            ############################################################
+            # R1 initially in +y direction, R1 initially in -y direction
+            # R1 goes and touches the ball, R2 scores
+
+            # R1 go forward y dist
+            R.goForward(R, robot_num=1, dx=r1_y_dist - y_tolerance, m=M)
+            sleep(5)
+
+            # R1 turn towards ball
+            R.turnRobot(R, robot_num=1, direction='L', m=M)
+            sleep(5)
+
+            # R1 goes and taps the ball
+            R.goForward(R, robot_num=1, dx=r1_x_dist - x_tolerance, m=M)
+            sleep(5)
+
+            # R1 backs up
+            R.goBackward(R, robot_num=1, dx=50, m=M)
+            sleep(10)
+
+            # R1 turns left
+            R.turnRobot(R, robot_num=1, direction='R', m=M)
+            sleep(5)
+
+            # R1 goes to the edge of the field
+            R.goForward(R, robot_num=1, dx=50, m=M)
+            sleep(5)
+
+            r2_x_dist = round(abs(S.robot2[0] - S.ball[0]), 2)
+            r2_y_dist = round(abs(S.robot2[1] - S.ball[1]), 2)
+            r2_goal_dist = round(abs(S.robot2[0]))
+            print("r2 xdist: " + str(r2_x_dist))
+            print("r2 ydist: " + str(r2_y_dist))
+
+            # R2 goes forward y dist
+            R.goForward(R, robot_num=2, dx=r2_y_dist, m=M)
+            sleep(5)
+
+            # R2 turns toward ball
+            R.turnRobot(R, robot_num=2, direction='R', m=M)
+            sleep(5)
+
+            # R2 takes it all the way
+            R.goForward(R, robot_num=2, dx=r2_goal_dist, m=M)
+            sleep(10)
